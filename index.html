@@ -1,0 +1,1747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>一眼千年：敦煌的颜色会说话</title>
+<style>
+/* ============================================================
+   一眼千年 · v2 —— 美术方向：矿物的重量，光的仪式感
+   全页明暗弧线：入窟黑 → 窟内有光 → 出窟黑
+   ============================================================ */
+:root{
+  --ink:#2A1F14;          /* 墨色 */
+  --cave:#14100C;         /* 洞窟黑 */
+  --cave2:#1D1712;        /* 窟内暗面 */
+  --sand:#C8A45C;         /* 沙土黄 */
+  --zhusha:#A6373A;       /* 朱砂 */
+  --shiqing:#2B5B8C;      /* 石青 */
+  --shilv:#4C8B6B;        /* 石绿 */
+  --tuhong:#8C4A32;       /* 土红 */
+  --jin:#C9A045;          /* 金 */
+  --jin-hi:#F4E2A6;       /* 金箔高光 */
+  --jin-lo:#8C6A1E;       /* 金箔暗部 */
+  --绢:#E9DCBE;           /* 绢本 */
+  --dim:#9C8A6E;          /* 暗面文字 */
+  --ease:cubic-bezier(.22,1,.36,1);   /* 全站统一缓动 easeOutQuint */
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:"Noto Serif SC","Songti SC","STSong",serif;
+  background:var(--cave);color:#D8CBB2;overflow-x:hidden;
+  max-width:680px;margin:0 auto;position:relative;
+  box-shadow:0 0 60px rgba(0,0,0,.8);
+}
+img{display:block;}
+main{position:relative;z-index:1;}
+
+/* ---- 全局肌理层：砂砾噪点 + 四角暗角 ---- */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:5;
+  background-image:radial-gradient(rgba(210,180,130,.05) 1px,transparent 1px);
+  background-size:5px 5px;mix-blend-mode:overlay;
+}
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:4;
+  background:radial-gradient(ellipse 120% 100% at 50% 40%, transparent 55%, rgba(10,7,4,.55) 100%);
+}
+
+/* ---- 滚动进场：尘埃落定式 ---- */
+.rise{opacity:0;transform:translateY(22px);transition:opacity 1s var(--ease),transform 1s var(--ease);}
+.rise.show{opacity:1;transform:none;}
+
+/* ---- 右侧导航 ---- */
+#dots{position:fixed;right:10px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:12px;}
+#dots a{width:6px;height:6px;border-radius:50%;background:rgba(200,164,92,.3);transition:all .4s var(--ease);}
+#dots a.on{background:var(--jin);transform:scale(1.6);box-shadow:0 0 8px rgba(201,160,69,.6);}
+
+/* ---- 板块章节头：竖排金线 ---- */
+.chap{padding:110px 26px 90px;position:relative;}
+.chap-head{position:relative;margin-bottom:52px;padding-left:52px;}
+.chap-vert{ /* 竖排引言，贴左缘 */
+  position:absolute;left:0;top:6px;writing-mode:vertical-rl;white-space:nowrap;
+  font-size:11px;letter-spacing:.35em;color:var(--dim);opacity:.8;
+}
+.chap-vert::after{content:"";position:absolute;right:-10px;top:0;bottom:0;width:1px;
+  background:linear-gradient(180deg,var(--jin-hi),var(--jin-lo) 70%,transparent);opacity:.55;}
+.chap-no{
+  font-size:11px;letter-spacing:.5em;color:var(--tuhong);margin-bottom:14px;
+}
+.chap-head h2{
+  font-size:34px;font-weight:700;letter-spacing:.1em;color:#EADFC8;line-height:1.3;
+}
+.chap-head h2 em{
+  font-style:normal;
+  background:linear-gradient(160deg,var(--jin-hi) 20%,var(--jin) 55%,var(--jin-lo));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+.chap-head p{margin-top:16px;font-size:13.5px;line-height:2.15;color:var(--dim);max-width:30em;}
+
+/* 金色渐变（标题/分隔线用） */
+.grad-gold{background:linear-gradient(160deg,var(--jin-hi),var(--jin) 55%,var(--jin-lo));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+
+/* ============ S1 封面 · 入窟 ============ */
+.cover{min-height:100vh;position:relative;overflow:hidden;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;padding:70px 30px;}
+.cover-bg{ /* 千佛壁画，沉入黑暗 */
+  position:absolute;inset:0;background:url("assets/cover-cliff.jpg") center/cover no-repeat;
+  opacity:.16;filter:saturate(.75) brightness(.9);
+  animation:bgWake 2.4s var(--ease) both;
+}
+@keyframes bgWake{from{opacity:0;}to{opacity:.16;}}
+.cover-veil{position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(20,16,12,.82),rgba(20,16,12,.45) 45%,rgba(20,16,12,.9));}
+.light-shaft{ /* 洞窟光柱 */
+  position:absolute;top:-8%;left:50%;transform:translateX(-50%);
+  width:150px;height:88%;pointer-events:none;
+  background:radial-gradient(ellipse 50% 55% at 50% 30%,rgba(244,226,166,.16),rgba(244,226,166,.05) 55%,transparent 78%);
+  animation:lampBreathe 3s ease-in-out infinite;
+}
+@keyframes lampBreathe{0%,100%{opacity:.85;}50%{opacity:1;}}
+.cover-inner{position:relative;z-index:2;}
+.cover-kicker{
+  font-size:11px;letter-spacing:.55em;text-indent:.55em;color:var(--dim);margin-bottom:36px;
+  opacity:0;animation:charWake .9s var(--ease) .3s forwards;
+}
+.cover h1{font-size:54px;font-weight:700;letter-spacing:.12em;color:#EFE5CF;line-height:1.4;}
+.cover h1 .ch{display:inline-block;opacity:.12;filter:brightness(.15);
+  animation:charWake 1.1s var(--ease) forwards;}
+.cover h1 .ch:nth-child(1){animation-delay:.5s;}
+.cover h1 .ch:nth-child(2){animation-delay:.85s;}
+.cover h1 .ch:nth-child(3){animation-delay:1.2s;}
+.cover h1 .ch:nth-child(4){animation-delay:1.55s;}
+.cover h1 .ch.em{
+  background:linear-gradient(160deg,var(--jin-hi),var(--jin) 55%,var(--jin-lo));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+}
+@keyframes charWake{to{opacity:1;filter:brightness(1);}}
+.cover-en{margin-top:16px;font-size:10.5px;letter-spacing:.3em;color:var(--dim);opacity:.5;
+  font-family:Georgia,serif;opacity:0;animation:charWake 1s var(--ease) 1.8s forwards;}
+/* 颜料滴落 */
+.drops{position:relative;height:64px;margin-top:44px;width:100%;}
+.drops i{position:absolute;top:0;width:11px;height:11px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;
+  opacity:0;animation:drop 2.6s var(--ease) forwards;box-shadow:0 3px 10px rgba(0,0,0,.5);}
+.drops i:nth-child(1){left:24%;background:var(--zhusha);animation-delay:2s;}
+.drops i:nth-child(2){left:37%;background:var(--shiqing);animation-delay:2.3s;}
+.drops i:nth-child(3){left:50%;background:var(--shilv);animation-delay:2.6s;}
+.drops i:nth-child(4){left:63%;background:var(--tuhong);animation-delay:2.9s;}
+.drops i:nth-child(5){left:76%;background:var(--jin);animation-delay:3.2s;}
+@keyframes drop{0%{transform:translateY(-26px) scale(.6);opacity:0;}
+  30%{opacity:1;}75%{transform:translateY(34px);opacity:1;}
+  100%{transform:translateY(46px) scale(.9);opacity:0;}}
+.cover-intro{margin-top:26px;font-size:13.5px;line-height:2.3;color:#B3A488;max-width:26em;
+  opacity:0;animation:charWake 1.2s var(--ease) 3.4s forwards;}
+.scroll-hint{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
+  font-size:11px;letter-spacing:.4em;color:var(--dim);animation:breathe 2.4s ease-in-out infinite 4s;opacity:0;}
+@keyframes breathe{0%,100%{opacity:.25;}50%{opacity:.9;}}
+.scroll-hint::after{content:"";display:block;width:1px;height:30px;margin:10px auto 0;
+  background:linear-gradient(180deg,var(--sand),transparent);animation:drip 2s ease-in-out infinite;}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top;}55%{transform:scaleY(1);transform-origin:top;}
+  100%{transform:scaleY(0);transform-origin:bottom;}}
+
+/* ============ S2 时间的颜色 · 地仗层时间轴 ============ */
+#s2{background:linear-gradient(180deg,var(--cave) 0%,var(--cave2) 12%,var(--cave2) 88%,var(--cave));}
+.tl{position:relative;margin-top:60px;}
+.tl-axis{ /* 斑驳地仗层长轴 */
+  position:absolute;left:34px;top:0;bottom:0;width:10px;
+  background:linear-gradient(90deg,#3A2E20,#4A3B28 40%,#332818);
+  border-radius:5px;
+  /* 剥落缺口 */
+  -webkit-mask:linear-gradient(180deg,#000 0%,#000 100%);
+}
+.tl-axis::before{content:"";position:absolute;inset:0;border-radius:5px;
+  background:
+    radial-gradient(circle 5px at 40% 12%,var(--cave2) 98%,transparent),
+    radial-gradient(circle 7px at 70% 34%,var(--cave2) 98%,transparent),
+    radial-gradient(circle 4px at 30% 58%,var(--cave2) 98%,transparent),
+    radial-gradient(circle 6px at 55% 82%,var(--cave2) 98%,transparent);
+}
+.tl-item{position:relative;padding:0 0 64px 84px;min-height:120px;}
+.tl-node{ /* 颜色芯节点 */
+  position:absolute;left:30px;top:6px;width:18px;height:18px;border-radius:50%;
+  background:#2A2118;border:2px solid rgba(201,160,69,.35);
+  transition:all .8s var(--ease);z-index:2;
+}
+.tl-item.lit .tl-node{background:var(--node,var(--zhusha));border-color:transparent;
+  box-shadow:0 0 14px var(--node,var(--zhusha));}
+.tl-era{display:flex;align-items:baseline;gap:12px;margin-bottom:6px;}
+.tl-era h3{font-size:21px;letter-spacing:.1em;color:#E5D9C0;font-weight:700;}
+.tl-era span{font-size:11px;letter-spacing:.2em;color:var(--dim);}
+.tl-body{font-size:13px;line-height:2.1;color:#A8977C;max-width:29em;}
+.tl-body b{color:#E0CFA9;font-weight:600;}
+/* 干裂颜料碎片（不规则多边形） */
+.shards{display:flex;gap:10px;margin-top:14px;}
+.shards i{width:26px;height:18px;box-shadow:0 4px 9px rgba(0,0,0,.45);opacity:.9;}
+.shards i:nth-child(1){clip-path:polygon(0% 30%,55% 0%,100% 22%,88% 100%,18% 88%);}
+.shards i:nth-child(2){clip-path:polygon(10% 0%,90% 12%,100% 70%,60% 100%,0% 62%);transform:rotate(-6deg);}
+.shards i:nth-child(3){clip-path:polygon(0% 50%,40% 0%,100% 35%,78% 92%,10% 100%);transform:rotate(5deg);}
+.tl-img{margin-top:16px;border-radius:3px;overflow:hidden;position:relative;max-width:330px;
+  box-shadow:0 16px 40px rgba(0,0,0,.55);}
+.tl-img img{width:100%;height:auto;}
+.tl-img figcaption{position:absolute;left:0;right:0;bottom:0;padding:18px 12px 8px;
+  font-size:10.5px;letter-spacing:.12em;color:#CBB98F;
+  background:linear-gradient(180deg,transparent,rgba(10,7,4,.85));}
+.tl-img::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 26px rgba(10,7,4,.6);pointer-events:none;}
+
+/* ============ S3 颜色从哪里来 · 手电筒探索 ============ */
+#s3{background:var(--cave);}
+.torch-box{position:relative;border-radius:6px;overflow:hidden;cursor:none;user-select:none;
+  box-shadow:0 22px 60px rgba(0,0,0,.7);touch-action:none;
+  --mx:52%;--my:47%;--spot:135px;}
+.torch-box img{width:100%;height:auto;}
+.torch-dim{position:absolute;inset:0;background:#080502;opacity:.82;}        /* 窟内黑暗 */
+.torch-bright{position:absolute;inset:0;                                    /* 光斑显影层 */
+  -webkit-mask-image:radial-gradient(circle var(--spot) at var(--mx) var(--my),#000 0 52%,transparent 96%);
+  mask-image:radial-gradient(circle var(--spot) at var(--mx) var(--my),#000 0 52%,transparent 96%);}
+.torch-bright img{width:100%;height:auto;filter:contrast(1.08) saturate(1.12);}
+.torch-glow{ /* 光斑柔光 */
+  position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle calc(var(--spot)*1.5) at var(--mx) var(--my),
+    rgba(244,226,166,.12),rgba(244,226,166,.04) 55%,transparent 80%);
+}
+/* 颜料热点：呼吸亮起 */
+.pig-hot{position:absolute;width:34px;height:34px;transform:translate(-50%,-50%);z-index:6;
+  border-radius:50%;cursor:pointer;opacity:0;transition:opacity .6s var(--ease);}
+.pig-hot::before{content:"";position:absolute;inset:6px;border-radius:50%;
+  background:rgba(239,227,200,.92);box-shadow:0 0 0 0 rgba(239,227,200,.5);}
+.pig-hot::after{content:"";position:absolute;inset:0;border-radius:50%;
+  border:1px dashed rgba(239,227,200,.75);}
+.pig-hot.near{opacity:1;animation:hotPulse 2s ease-out infinite;}
+.pig-hot.guide{opacity:.9;animation:hotPulse 2s ease-out infinite;}
+@keyframes hotPulse{0%{box-shadow:0 0 0 0 rgba(239,227,200,.45);}
+  75%{box-shadow:0 0 0 14px rgba(239,227,200,0);}100%{box-shadow:0 0 0 0 rgba(239,227,200,0);}}
+.pig-hot .tag{position:absolute;left:50%;top:-30px;transform:translateX(-50%);
+  font-size:11px;letter-spacing:.2em;color:#2A1F14;background:rgba(233,220,190,.94);
+  padding:3px 10px;border-radius:2px;white-space:nowrap;opacity:0;transition:opacity .4s;}
+.pig-hot.near .tag,.pig-hot.guide .tag{opacity:1;}
+.pig-hot.guide::before{background:rgba(244,226,166,.95);}
+.torch-tip{text-align:center;font-size:11.5px;letter-spacing:.28em;color:var(--dim);margin-top:18px;
+  animation:breathe 2.6s ease-in-out infinite;}
+/* 颜料标本卡：从壁画剥落弹出 */
+.spec-card{margin-top:34px;background:linear-gradient(165deg,#231B12,#1A140D);
+  border:1px solid rgba(201,160,69,.28);border-radius:6px;padding:24px 22px;
+  display:none;box-shadow:0 18px 44px rgba(0,0,0,.5);
+  animation:peel .55s var(--ease);}
+.spec-card.show{display:block;}
+@keyframes peel{from{opacity:0;transform:scale(.86) rotate(-2.5deg);}to{opacity:1;transform:none;}}
+.spec-head{display:flex;gap:16px;align-items:center;margin-bottom:16px;}
+.spec-stone{width:64px;height:64px;flex:none;border-radius:50%;overflow:hidden;
+  clip-path:polygon(8% 18%,38% 0%,72% 6%,100% 34%,92% 74%,58% 100%,20% 88%,0% 55%);
+  box-shadow:0 8px 20px rgba(0,0,0,.5);}
+.spec-stone img{width:100%;height:100%;object-fit:cover;}
+.spec-stone.plain{display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 40% 32%,#FAF7EE,#E4D8BC 34%,#6B5940 68%,#2A1D10 100%);}
+.spec-stone.plain span{font-size:24px;color:#2A1F14;font-weight:700;
+  text-shadow:0 1px 1px rgba(242,234,216,.4);}
+.spec-head h4{font-size:22px;color:#EFE5CF;letter-spacing:.08em;}
+.spec-head small{display:block;font-size:11px;color:var(--dim);letter-spacing:.15em;margin-top:5px;}
+.spec-body p{font-size:13px;line-height:2.05;color:#B3A488;margin-bottom:9px;}
+.spec-body b{color:#E0CFA9;font-weight:600;}
+.spec-body .hex{display:inline-block;width:13px;height:13px;border-radius:3px;
+  vertical-align:-2px;margin-right:7px;box-shadow:0 0 6px rgba(0,0,0,.4);}
+
+/* ---------- 画工颜料匣：横向滑动的矿石标本 ---------- */
+.cab-wrap{margin-top:86px;position:relative;padding-left:52px;}   /* 左留出竖排引言的位置，避免与章节号/标题重叠 */
+.cab-wrap .chap-vert{left:-4px;}
+.cab-title{font-size:25px;color:#E7DBC1;letter-spacing:.06em;margin:14px 0 10px;}
+.cab-title em{font-style:normal;color:var(--jin-hi);}
+.cab-lead{font-size:13px;line-height:2.1;color:#A8977C;max-width:30em;}
+.cab-rail{display:flex;gap:0;overflow-x:auto;overscroll-behavior-x:contain;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;
+  margin-top:30px;margin-left:-52px;padding:34px 0 30px;
+  border-top:1px solid rgba(201,160,69,.22);border-bottom:1px solid rgba(201,160,69,.22);}
+.cab-rail::-webkit-scrollbar{display:none;}
+.cab-item{flex:0 0 47%;scroll-snap-align:center;position:relative;padding:0 16px;
+  cursor:pointer;text-align:center;}
+.cab-item:nth-child(even){transform:translateY(20px);}       /* 错位，拒绝等距排队 */
+.cab-rock{position:relative;width:100%;aspect-ratio:1/1;overflow:hidden;
+  filter:drop-shadow(0 16px 22px rgba(0,0,0,.65));
+  transition:transform .55s var(--ease),filter .55s var(--ease);
+  clip-path:polygon(12% 4%,62% 0%,96% 20%,100% 66%,78% 98%,30% 100%,0% 72%,2% 30%);}
+.cab-item:nth-child(2n) .cab-rock{clip-path:polygon(6% 16%,44% 2%,88% 8%,100% 48%,90% 88%,52% 100%,10% 92%,0% 46%);}
+.cab-item:nth-child(3n) .cab-rock{clip-path:polygon(20% 0%,74% 6%,100% 34%,94% 78%,60% 100%,16% 94%,0% 58%,4% 20%);}
+.cab-rock img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:saturate(1.05) contrast(1.06);}
+.cab-rock::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(circle at 42% 34%,transparent 28%,rgba(10,7,4,.34) 72%,rgba(10,7,4,.7) 100%);}
+/* 垩白无标本照：做成一束光打在白垩粉上，中心为真正的白垩色（非米黄），四周沉黑 */
+.cab-rock.plain{
+  background:radial-gradient(ellipse 52% 48% at 43% 36%,
+    #F7F4EA 0%,#E2D6BB 22%,#9A845F 46%,#58452F 68%,#2A1D10 86%,#1A130C 100%);
+}
+.cab-rock.plain::after{background:radial-gradient(circle at 43% 36%,
+    transparent 12%,rgba(10,7,4,.28) 52%,rgba(10,7,4,.82) 100%);}
+.cab-rock.plain span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:50px;font-weight:700;z-index:2;
+  color:rgba(58,44,26,.72);text-shadow:0 1px 1px rgba(241,232,208,.35);}
+.cab-item:hover .cab-rock,.cab-item.on .cab-rock{transform:translateY(-8px) rotate(-2deg);
+  filter:drop-shadow(0 22px 30px rgba(0,0,0,.8)) brightness(1.12);}
+.cab-meta{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:22px;}
+.cab-name{writing-mode:vertical-rl;font-size:16px;letter-spacing:.28em;color:#E7DBC1;}
+.cab-item.on .cab-name{color:var(--jin-hi);}
+.cab-hex{font:12px Georgia,monospace;color:#8A7350;letter-spacing:.08em;
+  writing-mode:vertical-rl;}
+.cab-tip{text-align:center;font-size:11px;letter-spacing:.26em;color:var(--dim);margin-top:18px;}
+.cab-arrow{display:inline-block;color:var(--jin);padding:0 6px;animation:breathe 2.4s ease-in-out infinite;}
+
+/* ============ S4 壁画细节探索 · 长卷放大镜 ============ */
+#s4{background:linear-gradient(180deg,var(--cave),var(--cave2) 20%,var(--cave2) 80%,var(--cave));}
+.scroll-box{position:relative;border-radius:4px;overflow:hidden;
+  box-shadow:0 22px 60px rgba(0,0,0,.7);}
+.scroll-box::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 70px rgba(10,7,4,.75);}
+.scroll-box img{width:100%;height:auto;}
+/* 手绘金线圈热点（SVG 椭圆虚线） */
+.scroll-hot{position:absolute;transform:translate(-50%,-50%);cursor:pointer;z-index:6;
+  width:72px;height:72px;}
+.scroll-hot svg{width:100%;height:100%;overflow:visible;}
+.scroll-hot ellipse{fill:none;stroke:var(--jin-hi);stroke-width:1.6;stroke-dasharray:7 6;
+  opacity:.85;animation:ringSpin 14s linear infinite;transform-origin:center;}
+@keyframes ringSpin{to{transform:rotate(360deg);}}
+.scroll-hot:hover ellipse,.scroll-hot:active ellipse{stroke-dasharray:100 0;transition:stroke-dasharray .6s;}
+.scroll-hot .lbl{position:absolute;left:50%;bottom:-26px;transform:translateX(-50%);
+  font-size:11px;letter-spacing:.22em;color:var(--jin-hi);white-space:nowrap;
+  text-shadow:0 2px 8px rgba(0,0,0,.8);}
+/* 靠近长卷底缘的热点：标签放圆圈上方，避免被 overflow:hidden 裁掉 */
+.scroll-hot.up .lbl{bottom:auto;top:-26px;}
+@media(max-width:719px){
+  .scroll-hot{width:56px;height:56px;}
+  .scroll-hot.up .lbl{transform:translateX(-72%);}   /* 窄屏下左移，避开"莲花背光"标签 */
+}
+/* 详情浮层：图文并陈、打开即可读，无占位动画 */
+.magnifier{position:fixed;inset:0;z-index:80;display:none;align-items:flex-start;justify-content:center;
+  background:rgba(10,7,4,.88);backdrop-filter:blur(6px);
+  overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;}
+.magnifier.open{display:flex;}
+.magnifier>div{margin:auto;width:min(860px,92vw);}   /* margin:auto：内容不足一屏时居中，超出时可从顶部滚看 */
+.mg-panel{position:relative;background:#1C140B;border:1px solid rgba(201,160,69,.45);border-radius:6px;
+  box-shadow:0 30px 80px rgba(0,0,0,.8);padding:32px 34px 28px;}
+.mg-close{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;
+  border:1px solid rgba(201,160,69,.5);background:none;color:var(--jin-hi);font-size:17px;
+  cursor:pointer;font-family:inherit;z-index:2;}
+.mg-title{margin:0;padding-right:44px;font-size:19px;font-weight:600;letter-spacing:.3em;color:var(--jin-hi);}
+.mg-rule{height:1px;margin:14px 0 18px;
+  background:linear-gradient(90deg,rgba(201,160,69,.7),rgba(201,160,69,0));}
+.mg-body{display:grid;grid-template-columns:1.05fr .95fr;gap:26px;align-items:start;}
+.mg-text{font-size:13px;line-height:2.15;color:#B3A488;}
+.mg-shots{display:flex;flex-direction:column;gap:16px;}
+.mg-shots figure{margin:0;min-width:0;}
+.mg-shots img{width:100%;height:176px;object-fit:cover;border-radius:3px;display:block;
+  border:1px solid rgba(201,160,69,.2);box-shadow:0 12px 30px rgba(0,0,0,.65);}
+.mg-shots figcaption{margin-top:7px;font-size:10.5px;line-height:1.6;color:#9A8A6E;
+  letter-spacing:.06em;text-align:center;}
+@media(max-width:719px){
+  .mg-panel{padding:24px 16px 20px;}
+  .mg-body{grid-template-columns:1fr;gap:18px;}
+  .mg-shots{flex-direction:row;gap:10px;}
+  .mg-shots img{height:126px;}
+  .mg-shots figcaption{font-size:9.5px;}
+}
+
+/* ============ S5 时间留下的痕迹 · 五档褪色 ============ */
+#s5{background:var(--cave);}
+.fade-box{position:relative;border-radius:6px;overflow:hidden;box-shadow:0 22px 60px rgba(0,0,0,.7);}
+.fade-box .base{width:100%;height:auto;transition:filter .8s var(--ease);}
+.damage{position:absolute;inset:0;pointer-events:none;transition:opacity .8s var(--ease);}
+.dust{position:absolute;inset:0;pointer-events:none;}
+.fade-ctrl{margin-top:22px;}
+.fade-slider{-webkit-appearance:none;appearance:none;width:100%;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,#4A3B28,#6B5638);outline:none;}
+.fade-slider::-webkit-slider-thumb{-webkit-appearance:none;width:26px;height:26px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--jin-hi),var(--jin) 60%,var(--jin-lo));
+  box-shadow:0 4px 12px rgba(0,0,0,.6);cursor:grab;}
+.fade-slider::-moz-range-thumb{width:26px;height:26px;border:none;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,var(--jin-hi),var(--jin) 60%,var(--jin-lo));
+  box-shadow:0 4px 12px rgba(0,0,0,.6);cursor:grab;}
+.fade-stages{display:flex;justify-content:space-between;margin-top:12px;font-size:10.5px;
+  letter-spacing:.1em;color:var(--dim);}
+.fade-stages span{transition:color .4s;}
+.fade-stages span.on{color:var(--jin-hi);}
+/* 修复档案：纵向条目 + 超大背景数字 */
+.archives{margin-top:64px;position:relative;}
+.arch-line{position:absolute;left:27px;top:10px;bottom:10px;width:1px;
+  background:linear-gradient(180deg,transparent,var(--jin-lo) 12%,var(--jin-lo) 88%,transparent);opacity:.5;}
+.arch{position:relative;padding:0 0 44px 72px;}
+.arch:last-child{padding-bottom:0;}
+.arch .num{position:absolute;left:0;top:-14px;font-size:64px;font-weight:700;color:rgba(233,220,190,.08);
+  font-family:Georgia,serif;line-height:1;}
+.arch h4{font-size:17px;color:#E5D9C0;letter-spacing:.12em;margin-bottom:10px;}
+.arch p{font-size:13px;line-height:2.1;color:#A8977C;max-width:29em;}
+.arch-img{margin-top:14px;max-width:330px;border-radius:3px;overflow:hidden;position:relative;
+  box-shadow:0 16px 40px rgba(0,0,0,.55);}
+.arch-img img{width:100%;height:auto;}
+.arch-img figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 8px;font-size:10.5px;
+  color:#CBB98F;letter-spacing:.1em;background:linear-gradient(180deg,transparent,rgba(10,7,4,.85));}
+
+/* ============ S6 敦煌色彩实验室 · 画工案台 ============ */
+#s6{background:linear-gradient(180deg,var(--cave2),#221A12 30%,#221A12 70%,var(--cave2));}
+.bench{position:relative;border-radius:10px;padding:40px 24px 34px;overflow:hidden;
+  background:linear-gradient(165deg,#2A2016,#1B140D 70%);
+  box-shadow:inset 0 1px 0 rgba(244,226,166,.08),0 24px 60px rgba(0,0,0,.6);}
+.lamp{position:absolute;top:-60px;left:50%;transform:translateX(-50%);
+  width:340px;height:340px;pointer-events:none;
+  background:radial-gradient(circle,rgba(244,210,140,.16),rgba(244,210,140,.05) 55%,transparent 75%);
+  animation:lampBreathe 3s ease-in-out infinite;}
+.bench h5{position:relative;text-align:center;font-size:12px;letter-spacing:.5em;text-indent:.5em;
+  color:#CBB98F;font-weight:400;margin-bottom:30px;}
+.dishes{display:flex;flex-wrap:wrap;gap:18px 20px;justify-content:center;position:relative;}
+.dish{border-radius:50%;cursor:pointer;position:relative;transition:transform .3s var(--ease);
+  background:radial-gradient(circle at 42% 34%,var(--c1) 0%,var(--c2) 58%,var(--c3) 100%);
+  box-shadow:inset 0 3px 8px rgba(255,255,255,.25),inset 0 -6px 12px rgba(0,0,0,.4),
+    0 6px 14px rgba(0,0,0,.5),0 0 0 3px rgba(20,16,12,.9),0 0 0 4px rgba(201,160,69,.25);}
+.dish.lg{width:66px;height:66px;} .dish.sm{width:54px;height:54px;margin-top:12px;}
+.dish:hover{transform:translateY(-4px);}
+.dish:active{transform:scale(.92);}
+.dish.used::after{content:"";position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid var(--jin-hi);opacity:.8;}
+.dish-name{position:absolute;left:50%;top:calc(100% + 5px);transform:translateX(-50%);
+  font-size:10px;letter-spacing:.15em;color:var(--dim);white-space:nowrap;}
+/* 笔 */
+.brush{position:absolute;z-index:10;width:30px;height:64px;pointer-events:none;opacity:0;
+  transition:transform .4s var(--ease),opacity .3s;left:0;top:0;}
+.brush svg{width:100%;height:100%;}
+/* 笔触托盘 */
+.strokes{margin-top:44px;min-height:56px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;
+  position:relative;padding-top:8px;}
+.strokes::before{content:"";position:absolute;top:0;left:12%;right:12%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(201,160,69,.4),transparent);}
+.stroke{width:88px;height:26px;cursor:pointer;transition:transform .35s var(--ease),opacity .35s;}
+.stroke:hover{transform:scale(1.08);}
+.stroke.bye{opacity:0;transform:scale(.6) rotate(8deg);}
+.bench-hint{margin-top:24px;text-align:center;font-size:11.5px;letter-spacing:.2em;color:var(--dim);min-height:1.6em;}
+
+/* ============ S7 把颜色还给它 · 亲手补色 ============ */
+#s7{background:var(--cave);}
+.paint-wrap{position:relative;}
+.pick-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;}
+.pick-label{font-size:11px;letter-spacing:.3em;color:var(--jin);white-space:nowrap;}
+.pick-meta,.cur-color{font-size:11px;letter-spacing:.08em;color:var(--dim);text-align:right;}
+.pick-row{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;}
+.pick-row::-webkit-scrollbar{display:none;}
+.pick-item{flex:0 0 84px;cursor:pointer;text-align:center;opacity:.6;transition:all .4s var(--ease);}
+.pick-item img{width:84px;height:88px;object-fit:cover;border-radius:3px;
+  border:1px solid rgba(201,160,69,.25);}
+.pick-item span{display:block;margin-top:6px;font-size:10.5px;letter-spacing:.08em;color:var(--dim);}
+.pick-item.on{opacity:1;transform:translateY(-3px);}
+.pick-item.on img{border-color:var(--jin-hi);box-shadow:0 0 0 1px var(--jin-hi),0 10px 22px rgba(0,0,0,.6);}
+.pick-item.on span{color:var(--jin-hi);}
+.pick-note{margin:-2px 0 22px;font-size:11.5px;line-height:1.9;color:#8E7C60;letter-spacing:.05em;}
+.pick-note::before{content:"✦";color:var(--jin);margin-right:8px;}
+
+.canvas-shell{position:relative;border-radius:3px;overflow:hidden;
+  background:#2A2118;box-shadow:0 26px 70px rgba(0,0,0,.75),0 0 0 1px rgba(201,160,69,.3);}
+.canvas-shell::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 60px rgba(20,14,8,.45);}
+#paintCanvas{display:block;width:100%;height:auto;touch-action:none;cursor:crosshair;}
+.canvas-tag{position:absolute;top:12px;right:12px;z-index:2;
+  padding:6px 10px;font-size:10px;letter-spacing:.2em;color:#F0DFB8;
+  background:rgba(20,15,10,.72);border:1px solid rgba(201,160,69,.45);border-radius:2px;}
+.paint-hint{margin-top:14px;text-align:center;font-size:11.5px;letter-spacing:.18em;
+  color:var(--dim);min-height:1.8em;transition:color .3s;}
+.prog-row{display:flex;align-items:center;gap:12px;margin:18px 0 30px;}
+.prog-track{flex:1;height:3px;background:rgba(201,160,69,.16);border-radius:2px;overflow:hidden;}
+.prog-track i{display:block;height:100%;width:0;border-radius:2px;
+  background:linear-gradient(90deg,var(--tuhong),var(--jin-hi));transition:width .6s var(--ease);}
+#progTxt{font-size:10.5px;letter-spacing:.12em;color:var(--dim);white-space:nowrap;}
+.pick-head.mt{margin-top:8px;}
+.pal-row{display:flex;flex-wrap:wrap;gap:14px 15px;justify-content:center;padding:8px 0 6px;}
+.pal-dot{position:relative;width:38px;height:38px;border-radius:50%;cursor:pointer;
+  background:var(--pc);border:1px solid rgba(0,0,0,.5);
+  box-shadow:inset 0 2px 5px rgba(255,255,255,.28),inset 0 -4px 8px rgba(0,0,0,.35),0 4px 10px rgba(0,0,0,.5);
+  transition:transform .3s var(--ease);}
+.pal-dot:hover{transform:translateY(-3px);}
+.pal-dot.on::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1px solid var(--jin-hi);}
+.pal-dot.mine::before{content:"";position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--jin-hi);}
+.pal-tip{margin-top:12px;text-align:center;font-size:10.5px;letter-spacing:.1em;color:#7E6D52;}
+.tool-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;
+  margin:26px 0 30px;padding:16px 0;
+  border-top:1px solid rgba(201,160,69,.18);border-bottom:1px solid rgba(201,160,69,.18);}
+.brush-sizes,.tool-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.mini-btn{padding:8px 12px;font-size:11px;letter-spacing:.12em;font-family:inherit;color:var(--dim);
+  background:rgba(233,220,190,.04);border:1px solid rgba(201,160,69,.3);border-radius:2px;
+  cursor:pointer;transition:all .3s var(--ease);}
+.mini-btn:hover{color:var(--jin-hi);border-color:var(--jin);}
+.mini-btn.on{color:#1D1712;font-weight:700;border-color:var(--jin);
+  background:linear-gradient(120deg,var(--jin-hi),var(--jin));}
+.card-form{margin-top:30px;display:flex;flex-direction:column;gap:16px;max-width:380px;margin-left:auto;margin-right:auto;}
+.card-form label{font-size:12px;letter-spacing:.25em;color:var(--dim);}
+.card-form input{width:100%;padding:13px 16px;border:1px solid rgba(201,160,69,.4);border-radius:3px;
+  background:rgba(233,220,190,.06);font-size:15px;font-family:inherit;color:#EFE5CF;outline:none;letter-spacing:.1em;}
+.card-form input:focus{border-color:var(--jin);}
+.btn{display:block;width:100%;padding:15px;border:none;border-radius:3px;cursor:pointer;
+  font-size:14px;letter-spacing:.4em;text-indent:.4em;font-family:inherit;color:#1D1712;
+  background:linear-gradient(120deg,var(--jin-hi),var(--jin) 55%,var(--jin-lo));
+  box-shadow:0 10px 26px rgba(201,160,69,.22);transition:transform .3s var(--ease);font-weight:700;}
+.btn:active{transform:scale(.97);}
+.btn.ghost{background:none;color:var(--sand);border:1px solid rgba(201,160,69,.45);box-shadow:none;font-weight:400;}
+.btn:disabled{opacity:.5;cursor:wait;}
+
+/* ---- 云端作品墙 ---- */
+.cloud-block{margin-top:38px;padding-top:26px;border-top:1px solid rgba(201,160,69,.18);}
+.cloud-note{font-size:11.5px;line-height:2;color:#8E7C60;margin:0 0 16px;}
+.cloud-msg{margin-top:12px;min-height:1.8em;text-align:center;font-size:11px;
+  letter-spacing:.08em;color:var(--dim);line-height:1.8;}
+.cloud-msg.ok{color:var(--jin-hi);}
+.cloud-msg.err{color:#D9927F;}
+.wall-head{display:flex;align-items:center;justify-content:space-between;margin:30px 0 14px;
+  font-size:11px;letter-spacing:.3em;color:var(--jin);}
+.wall{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.wall-item{position:relative;border:1px solid rgba(201,160,69,.25);border-radius:3px;
+  overflow:hidden;background:#241C13;cursor:pointer;transition:border-color .3s var(--ease),transform .3s var(--ease);}
+.wall-item:hover{border-color:var(--jin-hi);transform:translateY(-2px);}
+.wall-item img{width:100%;height:98px;object-fit:cover;display:block;}
+.wall-item .wi-cap{padding:6px 7px 8px;font-size:9.5px;line-height:1.6;color:#A8977C;}
+.wall-item .wi-cap b{display:block;font-weight:400;color:#E5D9C0;letter-spacing:.05em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wall-empty{grid-column:1/-1;text-align:center;font-size:11px;line-height:1.9;
+  color:var(--dim);padding:22px 0;}
+.lightbox{position:fixed;inset:0;z-index:90;display:none;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px;
+  background:rgba(10,7,4,.94);cursor:zoom-out;}
+.lightbox.on{display:flex;}
+.lightbox img{max-width:100%;max-height:76vh;object-fit:contain;
+  border:1px solid rgba(201,160,69,.4);box-shadow:0 30px 80px rgba(0,0,0,.8);}
+.lightbox p{margin-top:16px;font-size:12px;letter-spacing:.15em;color:#E5D9C0;text-align:center;}
+.lightbox .lb-close{margin-top:12px;font-size:10px;letter-spacing:.2em;color:var(--dim);}
+@media(max-width:400px){.wall{grid-template-columns:repeat(2,1fr);}.wall-item img{height:84px;}}
+
+/* ============ 结尾 · 出窟 ============ */
+.outro{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;background:radial-gradient(ellipse 60% 40% at 50% 46%,rgba(244,226,166,.07),transparent 75%),var(--cave);
+  padding:64px 30px 52px;text-align:center;}
+.outro-vert{writing-mode:vertical-rl;font-size:19px;letter-spacing:.55em;color:#D8CBB2;
+  line-height:2.4;opacity:0;transform:translateY(20px);transition:opacity 1.4s var(--ease),transform 1.4s var(--ease);}
+.outro-vert.show{opacity:1;transform:none;}
+.outro .fin{margin-top:34px;font-size:10.5px;letter-spacing:.5em;color:#6E5F48;}
+.outro .credit{margin-top:14px;font-size:9.5px;color:#544A38;letter-spacing:.08em;line-height:1.9;max-width:34em;}
+
+@media (max-width:400px){
+  .cover h1{font-size:44px;}
+  .chap-head h2{font-size:29px;}
+  .dish.lg{width:58px;height:58px;}.dish.sm{width:48px;height:48px;}
+}
+</style>
+</head>
+<body>
+
+<nav id="dots">
+  <a href="#s1"></a><a href="#s2"></a><a href="#s3"></a><a href="#s4"></a>
+  <a href="#s5"></a><a href="#s6"></a><a href="#s7"></a>
+</nav>
+
+<main>
+
+<!-- ============ S1 一眼千年 ============ -->
+<header class="cover" id="s1">
+  <div class="cover-bg"></div>
+  <div class="cover-veil"></div>
+  <div class="light-shaft"></div>
+  <div class="cover-inner">
+    <div class="cover-kicker">融合新闻 · 数字文化互动体验</div>
+    <h1><span class="ch">一</span><span class="ch em">眼</span><span class="ch">千</span><span class="ch">年</span></h1>
+    <div class="cover-en">A THOUSAND YEARS IN ONE GLANCE</div>
+    <div class="drops"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="cover-intro">
+      一千六百年前，画工在鸣沙山的崖壁上调和朱砂与石绿。<br>
+      一千六百年后，那些颜色仍在墙上低声说话。<br>
+      请向上滑动——走进洞窟，让光落在颜色上。
+    </p>
+  </div>
+  <div class="scroll-hint">向 上 入 窟</div>
+</header>
+
+<!-- ============ S2 时间的颜色 ============ -->
+<section class="chap" id="s2">
+  <div class="chap-head rise">
+    <span class="chap-vert">壁 画 的 配 色 随 时 代 生 长</span>
+    <div class="chap-no">壹 · TIMELINE</div>
+    <h2>时间的<em>颜色</em></h2>
+    <p>十个朝代、千年营造。沿这根斑驳的地仗层长轴向下，看每一代画工如何调自己的颜色。</p>
+  </div>
+
+  <div class="tl">
+    <div class="tl-axis"></div>
+
+    <div class="tl-item rise" style="--node:#8C4A32">
+      <div class="tl-node"></div>
+      <div class="tl-era"><h3>北凉</h3><span>五世纪 · 西域风起</span></div>
+      <p class="tl-body">最早的一批洞窟以<b>土红</b>大面积铺底，配石青、石绿，色块浓重、笔触拙朴，带着明显的西域龟兹风。</p>
+      <div class="shards"><i style="background:#8C4A32"></i><i style="background:#2B5B8C"></i><i style="background:#3D2B1F"></i></div>
+    </div>
+
+    <div class="tl-item rise" style="--node:#4C8B6B">
+      <div class="tl-node"></div>
+      <div class="tl-era"><h3>北魏 · 西魏</h3><span>六世纪 · 中原初融</span></div>
+      <p class="tl-body">九色鹿的故事画在土红底上展开；西魏以后中原画风传入，底色转白，色彩变得<b>清丽疏朗</b>。当年明艳的肉色，如今多已氧化成深褐——颜色没有消失，只是换了模样。</p>
+      <figure class="tl-img"><img src="assets/mural-254-dark.jpg" loading="lazy" alt="莫高窟254窟壁画">
+        <figcaption>莫高窟第 254 窟（北魏）· 铅丹氧化后的真实样貌</figcaption></figure>
+    </div>
+
+    <div class="tl-item rise" style="--node:#C9A045">
+      <div class="tl-node"></div>
+      <div class="tl-era"><h3>隋</h3><span>七世纪 · 承前启后</span></div>
+      <p class="tl-body">短短三十余年开窟近百。用色渐趋华丽，<b>朱砂与金</b>大量登场，为盛唐的绚烂做足铺垫。</p>
+      <div class="shards"><i style="background:#A6373A"></i><i style="background:#C9A045"></i><i style="background:#2B5B8C"></i></div>
+    </div>
+
+    <div class="tl-item rise" style="--node:#2B5B8C">
+      <div class="tl-node"></div>
+      <div class="tl-era"><h3>盛唐</h3><span>八世纪 · 金碧辉煌</span></div>
+      <p class="tl-body">敦煌艺术的巅峰。<b>青、绿、白、金</b>交织成金碧山水般的经变画，色彩层次丰富到近乎奢侈。</p>
+      <figure class="tl-img"><img src="assets/mural-217.jpg" loading="lazy" alt="莫高窟217窟盛唐壁画">
+        <figcaption>莫高窟第 217 窟（盛唐）· 青绿山水式经变</figcaption></figure>
+    </div>
+
+    <div class="tl-item rise" style="--node:#6B3A4B">
+      <div class="tl-node"></div>
+      <div class="tl-era"><h3>晚唐 · 五代 · 宋</h3><span>九至十一世纪 · 世俗入画</span></div>
+      <p class="tl-body">供养人像越来越多，市井服饰、嫁娶宴饮入画。用色趋于<b>温和的暖调</b>，赭石、绛紫成为主旋律。</p>
+      <figure class="tl-img"><img src="assets/mural-220-emperor.jpg" loading="lazy" alt="莫高窟220窟帝王图">
+        <figcaption>莫高窟第 220 窟 · 初唐帝王与群臣（东壁）</figcaption></figure>
+    </div>
+
+    <div class="tl-item rise" style="--node:#7E9A85">
+      <div class="tl-node"></div>
+      <div class="tl-era"><h3>西夏 · 元</h3><span>十一至十四世纪 · 清冷终章</span></div>
+      <p class="tl-body">密教题材带来新的审美：<b>大面积的石绿</b>铺满墙面，线描精绝、设色冷峻。千年营造，在淡雅中收笔。</p>
+      <div class="shards"><i style="background:#4C8B6B"></i><i style="background:#2E4B7E"></i><i style="background:#EFE3C8"></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S3 颜色从哪里来 · 手电筒 ============ -->
+<section class="chap" id="s3">
+  <div class="chap-head rise">
+    <span class="chap-vert">你 举 起 了 手 电 筒</span>
+    <div class="chap-no">贰 · PIGMENT</div>
+    <h2>颜色从<em>哪里</em>来</h2>
+    <p>洞窟里没有灯。想象你举着一支手电：指尖扫过暗墙，光斑里的颜色会醒来。找到五个发亮的光点，敲一敲，取一块颜料标本。</p>
+  </div>
+
+  <div class="torch-box rise" id="torchBox">
+    <img src="assets/mural-buddha.jpg" alt="早期洞窟壁画">
+    <div class="torch-dim"></div>
+    <div class="torch-bright"><img src="assets/mural-buddha.jpg" alt=""></div>
+    <div class="torch-glow"></div>
+    <!-- 五个颜料热点（位置贴着画面里的色区） -->
+    <div class="pig-hot" style="left:10%;top:60%;--dot:#A6373A" data-k="zhusha"><span class="tag">朱砂 · 红</span></div>
+    <div class="pig-hot guide" style="left:52%;top:47%;--dot:#4C8B6B" data-k="shilv"><span class="tag">石绿 · 青</span></div>
+    <div class="pig-hot" style="left:30%;top:39%;--dot:#C8A45C" data-k="zhese"><span class="tag">赭石 · 土黄</span></div>
+    <div class="pig-hot" style="left:52%;top:13%;--dot:#F6F3EB" data-k="bai"><span class="tag">垩白 · 白</span></div>
+    <div class="pig-hot" style="left:84%;top:60%;--dot:#2A2118" data-k="hei"><span class="tag">铅丹之死 · 黑</span></div>
+  </div>
+  <p class="torch-tip">移 动 指 尖 · 寻 找 光 点</p>
+
+  <div class="spec-card" id="specCard">
+    <div class="spec-head">
+      <div class="spec-stone" id="specStone"></div>
+      <div><h4 id="specName"></h4><small id="specSub"></small></div>
+    </div>
+    <div class="spec-body" id="specBody"></div>
+  </div>
+
+  <!-- 画工颜料匣：颜色上墙之前的原形 -->
+  <div class="cab-wrap rise">
+    <span class="chap-vert">敲 开 一 块 石 头</span>
+    <div class="chap-no">贰 · 附 / SPECIMENS</div>
+    <h3 class="cab-title">画工的<em>颜料匣</em></h3>
+    <p class="cab-lead">颜色上墙之前，是石头、是土、是金箔。指尖横扫这只木匣，敲一块，看看它原来的模样——再回头看壁画，会是另一种读法。</p>
+    <div class="cab-rail" id="cabRail"></div>
+    <p class="cab-tip"><span class="cab-arrow">←</span> 横 向 滑 动 · 敲 一 块 取 标 本 <span class="cab-arrow">→</span></p>
+  </div>
+</section>
+
+<!-- ============ S4 壁画细节探索 · 长卷放大镜 ============ -->
+<section class="chap" id="s4">
+  <div class="chap-head rise">
+    <span class="chap-vert">凑 近 看 壁 画</span>
+    <div class="chap-no">叁 · DETAILS</div>
+    <h2>壁画细节<em>探索</em></h2>
+    <p>北周第 428 窟的说法长卷。四道旋转的金线圈圈住了四种图案——点进去，用放大镜看它们，也看它们背后的意思。</p>
+  </div>
+
+  <div class="scroll-box rise" id="scrollBox">
+    <img src="assets/mural-428-apsaras.jpg" alt="莫高窟428窟说法图">
+    <div class="scroll-hot" style="left:13%;top:16%" data-i="0"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="46" ry="44"/></svg><span class="lbl">飞 天</span></div>
+    <div class="scroll-hot" style="left:50%;top:42%" data-i="1"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="46" ry="44"/></svg><span class="lbl">莲花背光</span></div>
+    <div class="scroll-hot" style="left:74%;top:20%" data-i="2"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="46" ry="44"/></svg><span class="lbl">伎 乐</span></div>
+    <div class="scroll-hot up" style="left:36%;top:87%" data-i="3"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="50" rx="46" ry="44"/></svg><span class="lbl">供养人</span></div>
+  </div>
+
+  <!-- 详情浮层：图文并陈 -->
+  <div class="magnifier" id="magnifier">
+    <button class="mg-close" id="mgClose">✕</button>
+    <div>
+      <div class="mg-panel">
+        <h3 class="mg-title" id="mgTitle"></h3>
+        <div class="mg-rule"></div>
+        <div class="mg-body">
+          <div class="mg-text" id="mgText"></div>
+          <div class="mg-shots" id="mgDetailImgs"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S5 时间留下的痕迹 ============ -->
+<section class="chap" id="s5">
+  <div class="chap-head rise">
+    <span class="chap-vert">光 熄 了 一 半</span>
+    <div class="chap-no">肆 · CONSERVATION</div>
+    <h2>时间留下的<em>痕迹</em></h2>
+    <p>这幅初唐壁画正在你眼前慢慢变老——拖动滑块回溯千年。有些"褪色"并非风化，而是一场含铅颜料的慢性氧化。</p>
+  </div>
+
+  <div class="fade-box rise" id="fadeBox">
+    <img class="base" id="fadeImg" src="assets/mural-220-repro.jpg" alt="莫高窟220窟复原图">
+    <!-- 伤痕层：灰斑 / 龟裂 / 露出的草泥地仗 -->
+    <svg class="damage" id="damageLayer" viewBox="0 0 1000 750" preserveAspectRatio="none">
+      <defs>
+        <!-- 剥落边缘：分形噪声扰动 + 羽化，杜绝硬边补丁 -->
+        <filter id="peelEdge" x="-25%" y="-25%" width="150%" height="150%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.028" numOctaves="3" seed="7" result="nz"/>
+          <feDisplacementMap in="SourceGraphic" in2="nz" scale="34"
+                             xChannelSelector="R" yChannelSelector="G"/>
+          <feGaussianBlur stdDeviation="2.2"/>
+        </filter>
+        <!-- 地仗草泥：中心泥褐，向外渐隐，边缘与颜料层自然咬合 -->
+        <radialGradient id="earthA" cx="42%" cy="40%" r="68%">
+          <stop offset="0%"  stop-color="#6B4C2A" stop-opacity=".88"/>
+          <stop offset="55%" stop-color="#4A3520" stop-opacity=".72"/>
+          <stop offset="100%" stop-color="#2A1D10" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="earthB" cx="55%" cy="55%" r="70%">
+          <stop offset="0%"  stop-color="#5E4326" stop-opacity=".8"/>
+          <stop offset="60%" stop-color="#3E2C1A" stop-opacity=".6"/>
+          <stop offset="100%" stop-color="#241810" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <g fill="#2E2620" id="dgSpots" opacity=".5">
+        <ellipse cx="180" cy="140" rx="60" ry="38"/><ellipse cx="540" cy="90" rx="46" ry="30"/>
+        <ellipse cx="840" cy="200" rx="70" ry="46"/><ellipse cx="300" cy="420" rx="56" ry="40"/>
+        <ellipse cx="700" cy="480" rx="64" ry="44"/><ellipse cx="120" cy="600" rx="44" ry="30"/>
+        <ellipse cx="900" cy="620" rx="52" ry="36"/><ellipse cx="460" cy="640" rx="40" ry="26"/>
+      </g>
+      <g stroke="#241C13" fill="none" id="dgCracks" opacity=".65">
+        <path d="M60 80 L150 170 L120 260 L210 330" stroke-width="2.5"/>
+        <path d="M880 60 L800 150 L850 240 L760 300" stroke-width="2"/>
+        <path d="M420 700 L480 620 L440 540" stroke-width="2"/>
+        <path d="M940 380 L860 430 L900 500" stroke-width="2.5"/>
+        <path d="M240 40 L300 110" stroke-width="2"/>
+      </g>
+      <!-- 墙皮剥落：不规则轮廓 + 草泥渐隐，露的是"地仗"不是黑洞 -->
+      <g id="dgPeel" filter="url(#peelEdge)">
+        <path d="M0 0 L190 0 Q150 48 172 96 Q132 132 96 108 Q54 148 0 132 Z" fill="url(#earthA)"/>
+        <path d="M1000 750 L806 750 Q838 700 822 646 Q866 612 902 646 Q958 616 1000 626 Z" fill="url(#earthB)"/>
+        <path d="M1000 0 L866 0 Q906 42 884 92 Q936 70 1000 108 Z" fill="url(#earthA)" opacity=".82"/>
+      </g>
+    </svg>
+    <canvas class="dust" id="dustCanvas"></canvas>
+  </div>
+
+  <div class="fade-ctrl rise">
+    <input type="range" class="fade-slider" id="fadeSlider" min="0" max="4" step="1" value="0">
+    <div class="fade-stages" id="fadeStages">
+      <span class="on">初绘时</span><span>微褪</span><span>氧化</span><span>斑驳</span><span>千年后</span>
+    </div>
+  </div>
+
+  <div class="archives">
+    <div class="arch-line"></div>
+    <div class="arch rise">
+      <span class="num">01</span>
+      <h4>数字敦煌</h4>
+      <p>"数字化"采集让壁画以毫米级精度永久留档——哪怕洞窟有朝一日不得不封闭，颜色也能在数字世界里继续活着。目前已有近三百个洞窟完成高精度影像采集。</p>
+    </div>
+    <div class="arch rise">
+      <span class="num">02</span>
+      <h4>小小洞窟，精密如实验室</h4>
+      <p>温湿度、二氧化碳、光照被实时监测——游客的每一次呼吸都会改变洞窟微环境。预约限流、轮换开放，是为了让壁画"慢一点变老"。</p>
+      <figure class="arch-img"><img src="assets/mural-428-apsaras.jpg" loading="lazy" alt="今日洞窟壁画">
+        <figcaption>今日洞窟内部 · 温湿度恒定监测中</figcaption></figure>
+    </div>
+    <div class="arch rise">
+      <span class="num">03</span>
+      <h4>临摹，最深情的保护</h4>
+      <p>从常书鸿到段文杰，几代画师在洞窟中一比一临摹，既为研究留下底本，也为复原褪色前的模样——上文那张"初绘时"，正是一幅复原临摹品。临摹者的调色盘里，装着对颜色最诚实的追问。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ S6 敦煌色彩实验室 ============ -->
+<section class="chap" id="s6">
+  <div class="chap-head rise">
+    <span class="chap-vert">你 也 成 了 画 工</span>
+    <div class="chap-no">伍 · LAB</div>
+    <h2>敦煌色彩<em>实验室</em></h2>
+    <p>画工的案台交到你手上。一盏油灯、十二碟颜料——用笔尖蘸取，在案上落下你的笔触，凑成五种颜色。</p>
+  </div>
+
+  <div class="bench rise" id="bench">
+    <div class="lamp"></div>
+    <h5>画 工 案 台</h5>
+    <div class="dishes" id="dishes"></div>
+    <div class="brush" id="brush"><svg viewBox="0 0 30 64">
+      <rect x="12" y="0" width="6" height="26" rx="3" fill="#8C6A1E"/>
+      <path d="M10 26 Q15 24 20 26 L17 52 Q15 56 13 52 Z" fill="#D9CBA8"/>
+      <path d="M13 52 Q15 50 17 52 L15 64 Q14 60 13 52Z" fill="#2A1F14"/>
+    </svg></div>
+    <div class="strokes" id="strokes"></div>
+    <p class="bench-hint" id="benchHint">点 击 颜 料 碟 · 蘸 笔 落 色（ 0 / 5 ）</p>
+  </div>
+</section>
+
+<!-- ============ S7 把颜色还给它 ============ -->
+<section class="chap" id="s7">
+  <div class="chap-head rise">
+    <span class="chap-vert">出 窟 前 ， 补 上 一 笔 颜 色</span>
+    <div class="chap-no">陆 · MY MURAL</div>
+    <h2>把颜色<em>还给它</em></h2>
+    <p>一千六百年，颜色一点点褪了。十二幅敦煌名作摊在案上——从九色鹿到三兔藻井，挑一幅，用案上那几碟矿物色亲手把颜色补回去。这一笔，轮到你了。</p>
+  </div>
+
+  <div class="paint-wrap rise">
+    <div class="pick-head">
+      <span class="pick-label">壹 · 选 一 幅 壁 画 · 左 右 滑 动</span>
+      <span class="pick-meta" id="paintMeta">—</span>
+    </div>
+    <div class="pick-row" id="pickRow"></div>
+    <p class="pick-note" id="pickNote">—</p>
+
+    <div class="canvas-shell">
+      <canvas id="paintCanvas"></canvas>
+      <div class="canvas-tag" id="canvasTag">未 上 色</div>
+    </div>
+    <p class="paint-hint" id="paintHint">选 一 碟 颜 料 · 在 画 上 落 笔</p>
+
+    <div class="prog-row">
+      <div class="prog-track"><i id="progFill"></i></div>
+      <span id="progTxt">已 补 色 0%</span>
+    </div>
+
+    <div class="pick-head mt">
+      <span class="pick-label">贰 · 蘸 一 碟 矿 物 色</span>
+      <span class="cur-color" id="curColor">朱砂 · #A6373A</span>
+    </div>
+    <div class="pal-row" id="palRow"></div>
+    <p class="pal-tip" id="palTip">色碟下带金点的，是你在画工案台上调的那几笔</p>
+
+    <div class="tool-row">
+      <div class="brush-sizes" id="brushSizes">
+        <button class="mini-btn" data-size="14">细 笔</button>
+        <button class="mini-btn on" data-size="30">中 笔</button>
+        <button class="mini-btn" data-size="56">粗 笔</button>
+      </div>
+      <div class="tool-btns">
+        <button class="mini-btn" id="btnCompare">看 未 上 色</button>
+        <button class="mini-btn" id="btnErase">洗 笔</button>
+        <button class="mini-btn" id="btnUndo">撤 一 笔</button>
+        <button class="mini-btn" id="btnClear">重 来</button>
+      </div>
+    </div>
+
+    <div class="card-form">
+      <label for="cardName">给 这 幅 画 起 个 名 字</label>
+      <input id="cardName" type="text" maxlength="10" placeholder="例如：千年一抹 / 我补的飞天">
+      <button class="btn" id="btnSave">收 下 这 幅 画</button>
+    </div>
+
+    <div class="cloud-block">
+      <div class="pick-head mt">
+        <span class="pick-label">叁 · 留 在 云 端</span>
+        <span class="pick-meta" id="cloudState">连 接 中</span>
+      </div>
+      <p class="cloud-note">把这幅补好的画存进云端，和别人的颜色挂在同一面墙上。不用登录，点一下就留下。</p>
+      <button class="btn ghost" id="btnPublish">留 在 云 端 · 给 大 家 看</button>
+      <p class="cloud-msg" id="cloudMsg">—</p>
+      <div class="wall-head">
+        <span>大 家 的 敦 煌</span>
+        <button class="mini-btn" id="btnRefreshWall">刷 新</button>
+      </div>
+      <div class="wall" id="wall"><p class="wall-empty">正在从云端取画…</p></div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+      <img id="lightboxImg" alt="云端补色作品">
+      <p id="lightboxCap"></p>
+      <span class="lb-close">点 击 空 白 处 关 闭</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 结尾 · 出窟 ============ -->
+<footer class="outro" id="outro">
+  <div class="outro-vert" id="outroVert">颜色不会说话，说话的是看它的人</div>
+  <div class="fin">— 一 眼 千 年 —</div>
+  <p class="credit">壁画图像：Wikimedia Commons、敦煌研究院、伯希和《敦煌石窟图录》及公开专题资料（古代壁画 · 公有领域）<br>
+  融合新闻编辑 · 第六组 · 数字文化传播作品</p>
+</footer>
+
+</main>
+
+<script src="assets/paint-images.js" charset="utf-8"></script>
+<script src="assets/workbuddy-cloud-sdk.global.js" charset="utf-8"></script>
+<script>
+/* 云服务 publicConfig：由 workbuddy_cloud_service 激活返回，仅含可公开的前端配置 */
+window.PUBLIC_CONFIG = {
+  endpoint: "https://dunhuang-colors.app.workbuddy.host",
+  oauthRelayBaseUrl: "https://www.workbuddy.cn/v2/as/genie-baas/oauth",
+  publishableKey: "wbpk_pMsv8e6lTKZixnbsUAFPHa_wL5iCm03NZyTUpGWF9haq0WtgebPOHaZ"
+};
+/* 初始化一次即可；SDK 缺失或初始化异常时降级为离线，不阻断本地补色/下载 */
+try{
+  window.cloud = window.WorkBuddyCloud
+    ? WorkBuddyCloud.createWorkBuddyCloud(window.PUBLIC_CONFIG)
+    : null;
+}catch(err){
+  console.warn('[cloud] 初始化失败，作品墙离线：', err && err.message);
+  window.cloud = null;
+}
+</script>
+<script>
+/* ============================================================
+   一眼千年 v2 —— 交互逻辑（尘埃、显影、剥落、晕开）
+   ============================================================ */
+const EASE = 'cubic-bezier(.22,1,.36,1)';
+
+/* ---------- 滚动进场 & 导航 ---------- */
+const io = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) e.target.classList.add('show'); }), {threshold:.12});
+document.querySelectorAll('.rise').forEach(el => io.observe(el));
+const dots = document.querySelectorAll('#dots a');
+const secIO = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting) dots.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#'+e.target.id));
+}), {threshold:.3});
+document.querySelectorAll('section[id],header[id],footer[id]').forEach(s => secIO.observe(s));
+/* 结尾竖排结语显影（此前从未触发，导致结尾页只剩空白） */
+new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting) document.getElementById('outroVert').classList.add('show');
+}), {threshold:.3}).observe(document.getElementById('outro'));
+
+/* ---------- S2：时间轴节点点亮 ---------- */
+const tlIO = new IntersectionObserver(es => es.forEach(e => {
+  e.target.classList.toggle('lit', e.isIntersecting && e.intersectionRatio > .5);
+}), {threshold:[0,.5,.9]});
+document.querySelectorAll('.tl-item').forEach(el => tlIO.observe(el));
+
+/* ---------- S3：手电筒 ---------- */
+const torch = document.getElementById('torchBox');
+const hots = [...torch.querySelectorAll('.pig-hot')];
+const NEAR = 110; // 光斑半径内的吸附距离
+function torchMove(x, y){
+  const r = torch.getBoundingClientRect();
+  const px = x - r.left, py = y - r.top;
+  torch.style.setProperty('--mx', px+'px');
+  torch.style.setProperty('--my', py+'px');
+  torch.querySelectorAll('.pig-hot.guide').forEach(g => g.classList.remove('guide')); // 首次交互撤掉引导
+  hots.forEach(h => {
+    const hx = parseFloat(h.style.left)/100*r.width, hy = parseFloat(h.style.top)/100*r.height;
+    const d = Math.hypot(px-hx, py-hy);
+    h.classList.toggle('near', d < NEAR + 60);
+  });
+}
+torch.addEventListener('pointermove', e => torchMove(e.clientX, e.clientY));
+torch.addEventListener('pointerdown', e => torchMove(e.clientX, e.clientY));
+torch.addEventListener('pointerleave', () => hots.forEach(h => h.classList.remove('near')));
+
+/* 颜料标本数据 */
+const PIG = {
+  zhusha:{name:'朱砂',sub:'矿物：辰砂（硫化汞）· 色号 #A6373A',color:'#A6373A',img:'assets/min-cinnabar-dk.jpg',
+    body:`<p><b><span class="hex" style="background:#A6373A"></span>从哪来：</b>产自湖南、贵州等地的汞矿，经丝路与漕运抵达西北，自古是最贵重的红色。</p>
+    <p><b>怎么用：</b>研磨成极细粉末，与动物胶调和。颗粒越细色越亮，画工以"三矾九染"层层罩染，得沉稳正红。画面里大面积的土红底，正出自它与更廉价的土红。</p>
+    <p><b>守住了：</b>化学性质极稳定，是敦煌壁画里最"长寿"的颜色之一。</p>`},
+  shilv:{name:'石绿',sub:'矿物：孔雀石 · 色号 #4C8B6B',color:'#4C8B6B',img:'assets/min-malachite-dk.jpg',
+    body:`<p><b><span class="hex" style="background:#4C8B6B"></span>从哪来：</b>铜矿氧化带的产物，与蓝铜矿（石青）同生共死——一蓝一绿常长在同一块石头上。</p>
+    <p><b>怎么用：</b>画面中央那件青绿色衣裙即是它。常与石青配对，青绿相间便是"青绿山水"的雏形。</p>
+    <p><b>守住了：</b>西夏洞窟用大面积石绿铺底，成为莫高窟晚期的标志性冷调。</p>`},
+  zhese:{name:'赭石 · 土黄',sub:'矿物：赭土（氧化铁 · 褐铁矿 / 赤铁矿）· 色号 #C8A45C',color:'#C8A45C',img:'assets/min-hematite-dk.jpg',
+    body:`<p><b><span class="hex" style="background:#C8A45C"></span>从哪来：</b>就地取材——敦煌本地的赭土，是最便宜、最普及的颜料。氧化铁一族一脉相承：偏黄的称赭石（即土黄，就是这块色样），偏红的称土红（北朝大面积铺底的深红即它，见色卡 #8C4A32）。</p>
+    <p><b>怎么用：</b>北朝画工在土红底上勾白线、点青绿，形成浑厚温暖的地域风格。</p>
+    <p><b>守住了：</b>氧化铁极稳定，千年后仍是那片沉默的暖色。</p>`},
+  bai:{name:'垩白',sub:'矿物：高岭土 / 方解石 · 色号 #F6F3EB',color:'#F6F3EB',img:'assets/min-kaolinite.jpg',
+    body:`<p><b><span class="hex" style="background:#F6F3EB"></span>从哪来：</b>白色颜料多取自本地高岭土与方解石，画面中的头光、飘带高光皆以白垩提亮。</p>
+    <p><b>怎么用：</b>白是"留光的颜色"——勾轮廓、提衣纹、画天冠，都靠它在暗底上撑出一层光。</p>
+    <p><b>守住了：</b>白垩稳定，但覆于铅粉之上的白，会随下面铅丹的氧化一起发灰。</p>`},
+  shiqing:{name:'石青',sub:'矿物：蓝铜矿 · 色号 #2B5B8C',color:'#2B5B8C',img:'assets/min-azurite-dk.jpg',
+    body:`<p><b><span class="hex" style="background:#2B5B8C"></span>从哪来：</b>铜矿氧化带的深蓝色结晶，与孔雀石（石绿）常常共生在同一块矿脉上，一蓝一绿，是敦煌冷色的两只脚。</p>
+    <p><b>怎么用：</b>研磨漂洗分出头青、二青、三青，越细越淡。画天、画山、画菩萨衣饰，与土红底相撞，撞出北朝最浓烈的对比。</p>
+    <p><b>守住了：</b>蓝铜矿稳定但怕潮，遇碱会慢慢转绿——有些"变绿的天空"，其实是石青在悄悄变成石绿。</p>`},
+  jin:{name:'金 · 金箔',sub:'工艺：沥粉贴金 · 色号 #C9A045',color:'#C9A045',img:'assets/min-gold.jpg',
+    body:`<p><b><span class="hex" style="background:#C9A045"></span>从哪来：</b>并非颜料，而是把黄金捶打至薄如蝉翼的箔，或调成金泥描线，多用在佛光、璎珞与天冠上。</p>
+    <p><b>怎么用：</b>先以"沥粉"堆出凸起的线条，再贴金箔压亮，暗窟里一线油灯便能让它整片浮起来——这是画工为"光"留的位置。</p>
+    <p><b>守住了：</b>金不氧化、不褪色，可也最容易被后人刮走。今天许多壁画的金处只剩凹凸的粉线，光还在，金已不在。</p>`},
+  hei:{name:'铅丹之死',sub:'颜料：铅丹（Pb₃O₄）· 如今 #2A2118',color:'#2A2118',img:'assets/mural-254-dark.jpg',
+    body:`<p><b><span class="hex" style="background:#2A2118"></span>这一处黑，不是颜料，是颜料的尸体。</b></p>
+    <p><b>原本是：</b>画人物肌肤与飘带的铅丹——一种鲜亮的橘红。千年的光照、湿气与微生物，让它悄悄转化为黑色的二氧化铅。</p>
+    <p><b>所以：</b>壁画上那些"深色面孔"，多是氧化后的错觉。复原临摹师的工作之一，就是把死去的颜色"救"回来。</p>`}
+};
+const specCard = document.getElementById('specCard');
+/* 统一的标本卡展开逻辑：壁画热点与颜料匣共用 */
+function openSpec(k){
+  const p = PIG[k]; if(!p) return;
+  const stone = document.getElementById('specStone');
+  if(p.img){ stone.classList.remove('plain'); stone.innerHTML = `<img src="${p.img}" alt="${p.name}">`; }
+  else { stone.classList.add('plain'); stone.innerHTML = `<span>白</span>`; }
+  document.getElementById('specName').textContent = p.name;
+  document.getElementById('specSub').textContent = p.sub;
+  document.getElementById('specBody').innerHTML = p.body;
+  specCard.classList.remove('show'); void specCard.offsetWidth; // 重触发剥落动画
+  specCard.classList.add('show');
+  specCard.scrollIntoView({behavior:'smooth', block:'nearest'});
+  document.querySelectorAll('.cab-item').forEach(c => c.classList.toggle('on', c.dataset.k === k));
+}
+hots.forEach(h => h.addEventListener('click', e => {
+  e.stopPropagation();
+  openSpec(h.dataset.k);
+}));
+
+/* 颜料匣：六块矿石标本（全部实拍 / 垩白无标本照则用矿石面示意） */
+const CAB = [
+  {k:'zhusha',  name:'朱砂', hex:'#A6373A', img:'assets/min-cinnabar-dk.jpg'},
+  {k:'shiqing', name:'石青', hex:'#2B5B8C', img:'assets/min-azurite-dk.jpg'},
+  {k:'shilv',   name:'石绿', hex:'#4C8B6B', img:'assets/min-malachite-dk.jpg'},
+  {k:'jin',     name:'金箔', hex:'#C9A045', img:'assets/min-gold.jpg'},
+  {k:'zhese',   name:'赭石', hex:'#C8A45C', img:'assets/min-hematite-dk.jpg'},
+  {k:'bai',     name:'垩白', hex:'#F6F3EB', img:'assets/min-kaolinite.jpg'}
+];
+const cabRail = document.getElementById('cabRail');
+cabRail.innerHTML = CAB.map(c => `
+  <div class="cab-item" data-k="${c.k}">
+    <div class="cab-rock ${c.img?'':'plain'}">
+      ${c.img?`<img src="${c.img}" alt="${c.name}矿石标本" loading="lazy">`:'<span>白</span>'}
+    </div>
+    <div class="cab-meta"><span class="cab-name">${c.name}</span><span class="cab-hex">${c.hex.toUpperCase()}</span></div>
+  </div>`).join('');
+cabRail.querySelectorAll('.cab-item').forEach(it =>
+  it.addEventListener('click', () => openSpec(it.dataset.k)));
+
+/* ---------- S4：壁画细节 · 图文直陈浮层 ---------- */
+/* pos 为 object-position 裁切焦点，保证图片与文字严格对应 */
+const DETAILS = [
+  {t:'飞 天',
+   shots:[{src:'assets/apsara-detail.jpg',cap:'莫高窟 · 双飞天 · 飘带凌空'},
+          {src:'assets/mural-428-apsaras.jpg',cap:'莫高窟 428 窟 · 北周飞天群像（本卷上沿）',pos:'50% 6%'}],
+   d:'不长翅膀、不腾云驾雾，只凭一条飘带便凌空而起。原是佛教中奏乐散花的乾闼婆与紧那罗，传入中国后被塑造成衣袂当风的神女。北朝的飞天健硕朴拙，盛唐的丰腴华美——读懂了飘带的弧线，就读懂了中国画的"气韵生动"。'},
+  {t:'莲花背光',
+   shots:[{src:'assets/mural-217.jpg',cap:'盛唐 217 窟 · 莲池经变局部'},
+          {src:'assets/mural-buddha.jpg',cap:'北魏 · 佛像头光与背光层叠'}],
+   d:'佛身后的桃形背光里层叠着卷草与莲瓣。莲花生于淤泥而花开清净，是佛教"出尘"意象的核心；它随丝路东传，与中原纹样融合，长出层层如塔的中国式变形——一朵莲花里，同时有恒河与庭院的影子。'},
+  {t:'伎 乐',
+   shots:[{src:'assets/dancer.jpg',cap:'舞姿 · 反弹琵琶的原型'},
+          {src:'assets/apsara-flute.jpg',cap:'榆林窟 15 窟 · 横笛伎乐天'}],
+   d:'手持乐器、翩然起舞的伎乐天。敦煌壁画保存了数百种古代乐器图像：琵琶、箜篌、排箫、羯鼓……一部画在墙上的"敦煌音乐史"。今天舞台上反弹琵琶的形象，正是从这些墙上舞姿里走出来的。'},
+  {t:'供养人',
+   shots:[{src:'assets/mural-220-emperor.jpg',cap:'220 窟 · 帝王与群臣'},
+          {src:'assets/mural-428-apsaras.jpg',cap:'莫高窟 428 窟 · 下方供养人行列（本卷下沿）',pos:'50% 94%'}],
+   d:'画面下方成行的小人，是出资开窟的供养人——真实的历史人物，穿着当朝服饰被永远画进佛国。他们是壁画的"赞助人"，也是千年后最可靠的服装史与世俗生活档案。'}
+];
+const magnifier = document.getElementById('magnifier');
+const mgTitle = document.getElementById('mgTitle');
+const mgText = document.getElementById('mgText');
+const mgDetailImgs = document.getElementById('mgDetailImgs');
+document.querySelectorAll('.scroll-hot').forEach(h => h.addEventListener('click', () => {
+  const d = DETAILS[+h.dataset.i];
+  mgTitle.textContent = d.t;
+  mgText.innerHTML = d.d;
+  mgDetailImgs.innerHTML = d.shots.map(s =>
+    `<figure><img src="${s.src}" alt="${s.cap}" loading="lazy" style="object-position:${s.pos||'50% 50%'}"><figcaption>${s.cap}</figcaption></figure>`).join('');
+  magnifier.classList.add('open');
+  magnifier.scrollTop = 0;               // 每次打开回到顶部
+  document.body.style.overflow = 'hidden'; // 锁定背景滚动，滑动只作用于浮层内容
+}));
+/* 关闭浮层并恢复背景滚动 */
+function closeMagnifier(){
+  magnifier.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('mgClose').addEventListener('click', closeMagnifier);
+magnifier.addEventListener('click', e => { if(e.target === magnifier) closeMagnifier(); });
+
+/* ---------- S5：五档褪色 + 尘埃粒子 ---------- */
+const fadeImg = document.getElementById('fadeImg');
+const damage = document.getElementById('damageLayer');
+const slider = document.getElementById('fadeSlider');
+const stageEls = document.querySelectorAll('#fadeStages span');
+// 各档参数：滤镜与伤痕强度
+const STAGES = [
+  {f:'brightness(1.06) saturate(1.05)', d:0},
+  {f:'brightness(.96) saturate(.85)',   d:.22},
+  {f:'brightness(.85) saturate(.65) sepia(.15)', d:.5},
+  {f:'brightness(.72) saturate(.5) sepia(.25)',  d:.78},
+  {f:'brightness(.6) saturate(.4) sepia(.3)',    d:1}
+];
+let stage = 0, autoPlay = null;
+function setStage(s){
+  stage = s;
+  fadeImg.style.filter = STAGES[s].f;
+  damage.style.opacity = STAGES[s].d;
+  stageEls.forEach((el,i) => el.classList.toggle('on', i === s));
+  slider.value = s;
+}
+slider.addEventListener('input', () => { stopAuto(); setStage(+slider.value); });
+function stopAuto(){ if(autoPlay){ clearInterval(autoPlay); autoPlay = null; } }
+function startAuto(){
+  stopAuto();
+  autoPlay = setInterval(() => {
+    if(stage < 4) setStage(stage + 1); else stopAuto();
+  }, 4200);
+}
+// 进入视野才开始"变老"，用户拖动即接管
+const fadeIO = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ setStage(0); startAuto(); } else stopAuto();
+}), {threshold:.4});
+fadeIO.observe(document.getElementById('fadeBox'));
+document.getElementById('fadeBox').addEventListener('pointerdown', stopAuto);
+
+/* 尘埃粒子（仅在可见时飘） */
+const dustCv = document.getElementById('dustCanvas');
+const dctx = dustCv.getContext('2d');
+let dustOn = false, motes = [];
+function dustInit(){
+  const r = dustCv.parentElement.getBoundingClientRect();
+  dustCv.width = r.width; dustCv.height = r.height;
+  motes = Array.from({length:14}, () => ({
+    x: Math.random()*r.width, y: Math.random()*r.height,
+    r: .6 + Math.random()*1.6, vx: (Math.random()-.5)*.18, vy: -.08 - Math.random()*.22,
+    a: .12 + Math.random()*.3
+  }));
+}
+function dustLoop(){
+  if(!dustOn) return;
+  dctx.clearRect(0,0,dustCv.width,dustCv.height);
+  motes.forEach(m => {
+    m.x += m.vx; m.y += m.vy;
+    if(m.y < -4) { m.y = dustCv.height + 4; m.x = Math.random()*dustCv.width; }
+    dctx.beginPath(); dctx.arc(m.x, m.y, m.r, 0, 7);
+    dctx.fillStyle = `rgba(233,220,190,${m.a})`; dctx.fill();
+  });
+  requestAnimationFrame(dustLoop);
+}
+new IntersectionObserver(es => es.forEach(e => {
+  dustOn = e.isIntersecting;
+  if(dustOn){ dustInit(); dustLoop(); }
+}), {threshold:.3}).observe(dustCv.parentElement);
+window.addEventListener('resize', () => dustOn && dustInit());
+
+/* ---------- S6：画工案台 ---------- */
+const PALETTE = [
+  {name:'朱砂',hex:'#A6373A'},{name:'土红',hex:'#8C4A32'},{name:'石青',hex:'#2B5B8C'},
+  {name:'青金',hex:'#2E4B7E'},{name:'石绿',hex:'#4C8B6B'},{name:'灰绿',hex:'#7E9A85'},
+  {name:'金',hex:'#C9A045'},{name:'沙黄',hex:'#C8A45C'},{name:'赭石',hex:'#7A5230'},
+  {name:'绛紫',hex:'#6B3A4B'},{name:'米白',hex:'#EFE3C8'},{name:'月白',hex:'#D8E2DC'}
+];
+const MAXC = 5;
+let picked = [];
+const dishesEl = document.getElementById('dishes');
+const strokesEl = document.getElementById('strokes');
+const benchHint = document.getElementById('benchHint');
+const brush = document.getElementById('brush');
+
+/* 生成颜料碟：明暗三色渐变模拟堆积 */
+function shade(hex, f){ // 简单调亮/调暗
+  const n = parseInt(hex.slice(1),16), r=n>>16, g=(n>>8)&255, b=n&255;
+  const m = v => Math.max(0, Math.min(255, Math.round(v*f)));
+  return `rgb(${m(r)},${m(g)},${m(b)})`;
+}
+PALETTE.forEach((p,i) => {
+  const d = document.createElement('button');
+  d.className = 'dish ' + (i%2 ? 'sm' : 'lg');
+  d.style.setProperty('--c1', shade(p.hex, 1.35));
+  d.style.setProperty('--c2', p.hex);
+  d.style.setProperty('--c3', shade(p.hex, .55));
+  d.innerHTML = `<span class="dish-name">${p.name}</span>`;
+  d.dataset.name = p.name;
+  d.addEventListener('click', () => pick(p, d));
+  dishesEl.appendChild(d);
+});
+/* 笔尖蘸取动画 → 落笔触 */
+function pick(p, dish){
+  const di = picked.findIndex(x => x.name === p.name);
+  if(di >= 0){ removeStroke(di); return; }
+  if(picked.length >= MAXC){ hint('案上只放得下五笔 · 点笔触可移除'); return; }
+  const br = bench.getBoundingClientRect(), dr = dish.getBoundingClientRect();
+  brush.style.opacity = 1;
+  brush.style.transform = `translate(${br.width/2-15}px, ${br.height-120}px)`;
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    brush.style.transform = `translate(${dr.left-br.left+dr.width/2-15}px, ${dr.top-br.top-30}px) rotate(-30deg)`;
+  }));
+  setTimeout(() => {
+    picked.push(p);
+    renderStrokes();
+    brush.style.transform = `translate(${br.width/2-15}px, ${br.height-120}px)`;
+    setTimeout(() => brush.style.opacity = 0, 420);
+    if(picked.length === MAXC) hint('五笔已齐 ✦ 往下滑，把颜色还给壁画');
+    else hint(`点 击 颜 料 碟 · 蘸 笔 落 色（ ${picked.length} / 5 ）`);
+  }, 420);
+}
+/* 笔触：SVG 笔锋形状 */
+function strokeSVG(color, rot){
+  return `<svg class="stroke" viewBox="0 0 88 26" style="transform:rotate(${rot}deg)">
+    <path d="M2 14 Q10 6 22 8 Q40 2 58 7 Q76 5 86 13 Q76 20 58 19 Q40 24 22 18 Q10 20 2 14Z"
+      fill="${color}" opacity=".95"/>
+    <path d="M2 14 Q10 6 22 8" fill="none" stroke="rgba(255,255,255,.28)" stroke-width="2"/></svg>`;
+}
+function renderStrokes(){
+  strokesEl.innerHTML = picked.map((p,i) =>
+    `<span data-i="${i}" style="display:inline-block;cursor:pointer">${strokeSVG(p.hex, (i%3-1)*4)}</span>`).join('');
+  strokesEl.querySelectorAll('span').forEach(s =>
+    s.addEventListener('click', () => removeStroke(+s.dataset.i)));
+  document.querySelectorAll('.dish').forEach(d =>
+    d.classList.toggle('used', picked.some(x => x.name === d.dataset.name)));
+}
+function removeStroke(i){
+  picked.splice(i,1);
+  renderStrokes();
+  hint(`点 击 颜 料 碟 · 蘸 笔 落 色（ ${picked.length} / 5 ）`);
+}
+let hintTimer;
+function hint(t){
+  benchHint.textContent = t;
+  benchHint.style.color = '#E8C99A';
+  clearTimeout(hintTimer);
+  hintTimer = setTimeout(() => { benchHint.style.color=''; }, 2600);
+}
+
+/* ---------- S7：把颜色还给它（选壁画 · 自由补色 · 装裱导出） ---------- */
+const IMGS = window.PAINT_IMAGES || [];
+const cv = document.getElementById('paintCanvas');
+const cx = cv.getContext('2d');
+
+/* 三层画布：底图（褪色素稿）/ 颜色层（笔触）/ 显示层
+   用 color 混合：只把笔触的色相与饱和度交给壁画，明暗、皴擦、剥落全留着，
+   所以涂上去像"颜色回到墙上"，而不是盖一块色块。 */
+const baseCv = document.createElement('canvas');
+const bctx = baseCv.getContext('2d');
+const paintCv = document.createElement('canvas');
+const pctx = paintCv.getContext('2d', {willReadFrequently:true});
+const BLEND = (() => {
+  const t = document.createElement('canvas').getContext('2d');
+  t.globalCompositeOperation = 'color';
+  return t.globalCompositeOperation === 'color' ? 'color' : 'multiply';
+})();
+
+let W = 0, H = 0, idx = 0;
+let strokes = [];            // 笔画栈：{color,size,erase,pts}
+let curStroke = null;
+let curColor = PALETTE[0];
+let brushSize = 30;
+let erasing = false;
+let showRaw = false;
+let loaded = [];
+let rafPending = false;
+
+const $ = id => document.getElementById(id);
+const pickRow = $('pickRow'), palRow = $('palRow');
+const paintHint = $('paintHint'), canvasTag = $('canvasTag');
+
+function hexRgba(hex, a){
+  const n = parseInt(hex.slice(1), 16);
+  return `rgba(${n>>16},${(n>>8)&255},${n&255},${a})`;
+}
+let sayTimer;
+function say(t){
+  paintHint.textContent = t;
+  paintHint.style.color = '#E8C99A';
+  clearTimeout(sayTimer);
+  sayTimer = setTimeout(() => { paintHint.style.color = ''; }, 2600);
+}
+
+/* ---- 壹 · 选图条 ---- */
+IMGS.forEach((it, i) => {
+  const b = document.createElement('button');
+  b.className = 'pick-item' + (i === 0 ? ' on' : '');
+  b.innerHTML = `<img src="${it.src}" alt="${it.name}"><span>${it.name}</span>`;
+  b.addEventListener('click', () => selectImage(i));
+  pickRow.appendChild(b);
+});
+
+/* ---- 贰 · 矿物色盘：案台调的五色置顶 ---- */
+function refreshPalette(){
+  const mine = picked.map(p => p.name);
+  const order = [...picked];
+  PALETTE.forEach(p => { if(!mine.includes(p.name)) order.push(p); });
+  if(!order.some(p => p.name === curColor.name)) curColor = order[0];
+  palRow.innerHTML = '';
+  order.forEach(p => {
+    const d = document.createElement('button');
+    d.className = 'pal-dot' + (!erasing && p.name === curColor.name ? ' on' : '') + (mine.includes(p.name) ? ' mine' : '');
+    d.style.setProperty('--pc', p.hex);
+    d.title = `${p.name} ${p.hex}`;
+    d.addEventListener('click', () => {
+      curColor = p;
+      setErase(false);
+      palRow.querySelectorAll('.pal-dot').forEach(x => x.classList.remove('on'));
+      d.classList.add('on');
+      $('curColor').textContent = `${p.name} · ${p.hex.toUpperCase()}`;
+      say(`蘸了 ${p.name} · 在画上落笔`);
+    });
+    palRow.appendChild(d);
+  });
+  $('curColor').textContent = erasing ? '洗 笔 · 擦 去 颜 色'
+    : `${curColor.name} · ${curColor.hex.toUpperCase()}`;
+  $('palTip').textContent = picked.length
+    ? `色碟下带金点的，是你在案台上调的 ${picked.length} 笔`
+    : '十二碟矿物色 · 点一碟蘸笔（也可回案台先调五色）';
+}
+function setErase(v){
+  erasing = v;
+  $('btnErase').classList.toggle('on', v);
+  if(v) palRow.querySelectorAll('.pal-dot').forEach(x => x.classList.remove('on'));
+  $('curColor').textContent = v ? '洗 笔 · 擦 去 颜 色'
+    : `${curColor.name} · ${curColor.hex.toUpperCase()}`;
+}
+
+/* ---- 载入一幅壁画 ---- */
+function selectImage(i){
+  const it = IMGS[i], img = loaded[i];
+  if(!it || !img) return;
+  idx = i; W = it.w; H = it.h;
+  [cv, baseCv, paintCv].forEach(c => { c.width = W; c.height = H; });
+  bctx.drawImage(img, 0, 0, W, H);
+  strokes = []; curStroke = null; showRaw = false;
+  $('btnCompare').textContent = '看 未 上 色';
+  $('btnCompare').classList.remove('on');
+  pickRow.querySelectorAll('.pick-item').forEach((b, k) => b.classList.toggle('on', k === i));
+  $('paintMeta').textContent = `${it.name} · ${it.meta} · ${i+1}/${IMGS.length}`;
+  $('pickNote').textContent = it.note;
+  render(); updateProgress();
+  say('选 一 碟 颜 料 · 在 画 上 落 笔');
+}
+
+/* ---- 笔头：径向柔边，沿路径插值落点 ---- */
+function stamp(x, y, r, hex, erase){
+  const g = pctx.createRadialGradient(x, y, r * .2, x, y, r);
+  const c = a => erase ? `rgba(0,0,0,${a})` : hexRgba(hex, a);
+  g.addColorStop(0, c(.92)); g.addColorStop(.6, c(.78)); g.addColorStop(1, c(0));
+  pctx.fillStyle = g;
+  pctx.beginPath(); pctx.arc(x, y, r, 0, Math.PI * 2); pctx.fill();
+}
+function withMode(s, fn){
+  pctx.save();
+  if(s.erase) pctx.globalCompositeOperation = 'destination-out';
+  fn();
+  pctx.restore();
+}
+function strokePts(s){
+  const step = Math.max(2, s.size / 3.5), pts = s.pts;
+  withMode(s, () => {
+    if(pts.length === 1){ stamp(pts[0][0], pts[0][1], s.size, s.color, s.erase); return; }
+    for(let k = 1; k < pts.length; k++){
+      const [x0, y0] = pts[k-1], [x1, y1] = pts[k];
+      const d = Math.hypot(x1-x0, y1-y0), n = Math.max(1, Math.ceil(d / step));
+      for(let j = 1; j <= n; j++)
+        stamp(x0 + (x1-x0)*j/n, y0 + (y1-y0)*j/n, s.size, s.color, s.erase);
+    }
+  });
+}
+function repaintLayer(){
+  pctx.clearRect(0, 0, W, H);
+  strokes.forEach(strokePts);
+}
+
+/* ---- 合成与显示 ---- */
+function compose(target, x, y, withPaint){
+  target.drawImage(baseCv, x, y);
+  if(withPaint && strokes.length){
+    target.save();
+    target.globalCompositeOperation = BLEND;
+    if(BLEND === 'multiply') target.globalAlpha = .72;   // 老浏览器降级
+    target.drawImage(paintCv, x, y);
+    target.restore();
+    if(BLEND === 'color'){
+      /* 再薄罩一层同色 multiply：把浮在表面的亮色压回矿物颜料的沉稳 */
+      target.save();
+      target.globalCompositeOperation = 'multiply';
+      target.globalAlpha = .22;
+      target.drawImage(paintCv, x, y);
+      target.restore();
+    }
+  }
+}
+function render(){
+  cx.clearRect(0, 0, W, H);
+  compose(cx, 0, 0, !showRaw);
+  canvasTag.textContent = showRaw ? '原 状 · 未 上 色'
+    : (strokes.length ? `已 落 ${strokes.length} 笔` : '未 上 色');
+}
+function scheduleRender(){
+  if(rafPending) return;
+  rafPending = true;
+  requestAnimationFrame(() => { rafPending = false; render(); });
+}
+
+/* ---- 落笔 ---- */
+function pos(e){
+  const r = cv.getBoundingClientRect();
+  return [(e.clientX - r.left) * W / r.width, (e.clientY - r.top) * H / r.height];
+}
+cv.addEventListener('pointerdown', e => {
+  if(!W) return;
+  e.preventDefault();
+  cv.setPointerCapture(e.pointerId);
+  if(showRaw){
+    showRaw = false;
+    $('btnCompare').textContent = '看 未 上 色';
+    $('btnCompare').classList.remove('on');
+  }
+  const [x, y] = pos(e);
+  curStroke = {color: curColor.hex, size: brushSize, erase: erasing, pts: [[x, y]]};
+  strokes.push(curStroke);
+  withMode(curStroke, () => stamp(x, y, brushSize, curStroke.color, curStroke.erase));
+  render();
+});
+cv.addEventListener('pointermove', e => {
+  if(!curStroke) return;
+  e.preventDefault();
+  const [x, y] = pos(e);
+  const last = curStroke.pts[curStroke.pts.length - 1];
+  const d = Math.hypot(x - last[0], y - last[1]);
+  if(d < 1) return;
+  const step = Math.max(2, brushSize / 3.5), n = Math.max(1, Math.ceil(d / step));
+  withMode(curStroke, () => {
+    for(let j = 1; j <= n; j++)
+      stamp(last[0] + (x-last[0])*j/n, last[1] + (y-last[1])*j/n, brushSize, curStroke.color, curStroke.erase);
+  });
+  curStroke.pts.push([x, y]);
+  scheduleRender();
+});
+function endStroke(){ if(curStroke){ curStroke = null; updateProgress(); } }
+cv.addEventListener('pointerup', endStroke);
+cv.addEventListener('pointercancel', endStroke);
+window.addEventListener('pointerup', endStroke);
+
+/* ---- 补色进度 ---- */
+function updateProgress(){
+  let pct = 0;
+  if(W && strokes.length){
+    const d = pctx.getImageData(0, 0, W, H).data;
+    let n = 0, tot = 0;
+    for(let y = 0; y < H; y += 8) for(let x = 0; x < W; x += 8){
+      tot++; if(d[(y*W + x)*4 + 3] > 40) n++;
+    }
+    pct = Math.round(n / tot * 100);
+  }
+  $('progFill').style.width = pct + '%';
+  $('progTxt').textContent = `已 补 色 ${pct}%`;
+  if(pct >= 55) say('颜色差不多回来了 ✦ 给它起个名字吧');
+  else if(strokes.length) say(`已落 ${strokes.length} 笔 · 继续补，或换一碟色`);
+  else say('细 笔 勾 线 · 粗 笔 铺 色 · 在 画 上 落 笔');
+  render();
+}
+
+/* ---- 工具栏 ---- */
+$('brushSizes').addEventListener('click', e => {
+  const b = e.target.closest('button'); if(!b) return;
+  brushSize = +b.dataset.size;
+  $('brushSizes').querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+});
+$('btnErase').addEventListener('click', () => {
+  setErase(!erasing);
+  say(erasing ? '洗笔蘸水 · 擦去画错的颜色' : '重新蘸上矿物色');
+});
+$('btnCompare').addEventListener('click', () => {
+  showRaw = !showRaw;
+  $('btnCompare').textContent = showRaw ? '看 我 补 的 色' : '看 未 上 色';
+  $('btnCompare').classList.toggle('on', showRaw);
+  render();
+  say(showRaw ? '这是它褪尽颜色的样子' : '这是你补上的颜色');
+});
+$('btnUndo').addEventListener('click', () => {
+  if(!strokes.length){ say('还没有落笔'); return; }
+  strokes.pop(); repaintLayer(); updateProgress();
+  say('撤去最后一笔');
+});
+$('btnClear').addEventListener('click', () => {
+  strokes = []; repaintLayer(); updateProgress();
+  say('回到一张素稿 · 重新来过');
+});
+
+/* ---- 装裱：绢本 + 金框 + 题签 + 朱印（下载与云端共用） ---- */
+function buildFramedCanvas(){
+  const raw = $('cardName').value.trim() || '我补的敦煌';
+  const name = raw.replace(/[\\/:*?"<>|]/g, '');
+  const fin = document.createElement('canvas'); fin.width = W; fin.height = H;
+  compose(fin.getContext('2d'), 0, 0, true);
+
+  const PAD = 64, TOP = 190, BOT = 236;
+  const EW = W + PAD*2, EH = H + TOP + BOT;
+  const e = document.createElement('canvas'); e.width = EW; e.height = EH;
+  const g = e.getContext('2d');
+  /* 绢本 + 织纹 */
+  g.fillStyle = '#E9DCBE'; g.fillRect(0, 0, EW, EH);
+  g.strokeStyle = 'rgba(160,130,80,.07)';
+  for(let y = 0; y < EH; y += 3){ g.beginPath(); g.moveTo(0, y); g.lineTo(EW, y); g.stroke(); }
+  g.strokeStyle = 'rgba(160,130,80,.045)';
+  for(let x = 0; x < EW; x += 4){ g.beginPath(); g.moveTo(x, 0); g.lineTo(x, EH); g.stroke(); }
+  const vg = g.createRadialGradient(EW/2, EH*.45, EH*.25, EW/2, EH*.5, EH*.8);
+  vg.addColorStop(0, 'rgba(90,60,30,0)'); vg.addColorStop(1, 'rgba(90,60,30,.13)');
+  g.fillStyle = vg; g.fillRect(0, 0, EW, EH);
+  /* 金框 */
+  g.strokeStyle = '#B08A2E'; g.lineWidth = 3; g.strokeRect(28, 28, EW-56, EH-56);
+  g.strokeStyle = 'rgba(176,138,46,.5)'; g.lineWidth = 1; g.strokeRect(40, 40, EW-80, EH-80);
+  g.fillStyle = '#B08A2E';
+  [[40,40],[EW-48,40],[40,EH-48],[EW-48,EH-48]].forEach(([x,y]) => g.fillRect(x, y, 8, 8));
+  /* 画心 */
+  g.drawImage(fin, PAD, TOP);
+  g.strokeStyle = 'rgba(201,160,69,.55)'; g.lineWidth = 2;
+  g.strokeRect(PAD, TOP, W, H);
+  /* 题记 */
+  g.textAlign = 'center';
+  g.fillStyle = '#6E5A3C'; g.font = '22px "Noto Serif SC",serif';
+  g.fillText('一 眼 千 年 · 敦 煌 的 颜 色 会 说 话', EW/2, 92);
+  g.fillStyle = '#8A7350'; g.font = '17px "Noto Serif SC",serif';
+  g.fillText(`${IMGS[idx].name} · ${IMGS[idx].meta} · 一千六百年后由你补色`, EW/2, 132);
+  /* 竖排题签 */
+  const tagW = 70, tagX = EW - PAD - tagW - 22, tagY = 64;
+  const tagH = 52 + [...name].length * 32;
+  g.fillStyle = '#F5EDD8'; g.fillRect(tagX, tagY, tagW, tagH);
+  g.strokeStyle = '#B08A2E'; g.lineWidth = 2; g.strokeRect(tagX, tagY, tagW, tagH);
+  g.fillStyle = '#2A1F14'; g.font = '600 25px "Noto Serif SC","Songti SC",serif';
+  [...name].forEach((ch, i) => g.fillText(ch, tagX + tagW/2, tagY + 46 + i*32));
+  /* 落款 */
+  const DY = TOP + H + 62;
+  g.strokeStyle = 'rgba(176,138,46,.5)'; g.lineWidth = 1;
+  g.beginPath(); g.moveTo(EW/2-140, DY-34); g.lineTo(EW/2+140, DY-34); g.stroke();
+  g.fillStyle = '#8A7350'; g.font = '19px "Noto Serif SC",serif';
+  const d = new Date();
+  g.fillText(`制于 ${d.getFullYear()} 年 ${d.getMonth()+1} 月 ${d.getDate()} 日 · 鸣沙山麓`, EW/2, DY+6);
+  g.font = '17px "Noto Serif SC",serif';
+  g.fillText('—— 褪去的颜色，被你补回来了 ——', EW/2, DY+44);
+  /* 朱印 */
+  const ss = 54, sx = EW/2 + 190, sy = DY - 46;
+  g.save(); g.translate(sx + ss/2, sy + ss/2); g.rotate(-0.045);
+  g.fillStyle = 'rgba(166,55,58,.88)'; g.fillRect(-ss/2, -ss/2, ss, ss);
+  g.strokeStyle = 'rgba(245,237,216,.75)'; g.lineWidth = 2;
+  g.strokeRect(-ss/2+5, -ss/2+5, ss-10, ss-10);
+  g.fillStyle = '#F5EDD8'; g.font = '600 18px "Noto Serif SC","Songti SC",serif';
+  g.textBaseline = 'middle';
+  g.fillText('一', -11, -12); g.fillText('眼', 11, -12);
+  g.fillText('千', -11, 13); g.fillText('年', 11, 13);
+  g.restore(); g.textBaseline = 'alphabetic';
+  return {canvas: e, name: name};
+}
+function exportCard(){
+  const {canvas, name} = buildFramedCanvas();
+  const a = document.createElement('a');
+  a.download = `${name || '我补的敦煌'}.png`;
+  a.href = canvas.toDataURL('image/png');
+  a.click();
+  say('已收下这幅画 ✦ 愿它替你把颜色留住');
+}
+$('btnSave').addEventListener('click', exportCard);
+
+/* ============================================================
+   云服务 · 大家的敦煌
+   表 public.dunhuang_works：匿名可投稿、公开可读（RLS 已配）
+   本地 file:// 打开时云端会连不上，补色与下载仍可正常使用。
+   ============================================================ */
+const CLOUD_TABLE = 'dunhuang_works';
+const MAX_IMG_CHARS = 600000;          /* 与 image_data 字段的 CHECK 一致 */
+const $cloudState = $('cloudState'), $cloudMsg = $('cloudMsg'), $wall = $('wall');
+const $btnPublish = $('btnPublish'), $btnRefreshWall = $('btnRefreshWall');
+
+function cloudState(t){ $cloudState.textContent = t; }
+function cloudMsg(t, kind){
+  $cloudMsg.textContent = t;
+  $cloudMsg.className = 'cloud-msg' + (kind ? ' ' + kind : '');
+}
+
+/* 超时保护：本地 / 弱网下不要让作品墙一直转 */
+function withTimeout(thenable, ms){
+  let timer;
+  const guard = new Promise((_, rej) => { timer = setTimeout(() => rej(new Error('云端请求超时')), ms); });
+  return Promise.race([Promise.resolve(thenable), guard]).finally(() => clearTimeout(timer));
+}
+
+/* 把装裱图压成可入库的 JPEG data URI（逐级降质 / 缩小，绝不超字段上限） */
+function cloudImage(canvas){
+  const MAXW = 720;
+  let scale = Math.min(1, MAXW / canvas.width), q = .8, url = '';
+  for(let i = 0; i < 6; i++){
+    const w = Math.max(320, Math.round(canvas.width * scale));
+    const h = Math.max(320, Math.round(canvas.height * scale));
+    const c = document.createElement('canvas'); c.width = w; c.height = h;
+    const g = c.getContext('2d');
+    g.fillStyle = '#E9DCBE'; g.fillRect(0, 0, w, h);
+    g.drawImage(canvas, 0, 0, w, h);
+    url = c.toDataURL('image/jpeg', q);
+    if(url.length <= MAX_IMG_CHARS) return url;
+    if(q > .5) q -= .1; else scale *= .82;
+  }
+  return url.length <= MAX_IMG_CHARS ? url : null;
+}
+
+/* 本次画作实际用到的矿物色（去重，按落笔顺序） */
+function usedColors(){
+  const seen = [], out = [];
+  strokes.forEach(s => {
+    if(s.erase || !s.color || seen.includes(s.color)) return;
+    seen.push(s.color);
+    const p = PALETTE.find(x => x.hex === s.color) || picked.find(x => x.hex === s.color);
+    out.push(p ? {name: p.name, hex: p.hex} : {name: '自定义', hex: s.color});
+  });
+  return out;
+}
+function currentProgress(){ return parseInt($('progFill').style.width, 10) || 0; }
+function safeImage(v){ return /^data:image\//.test(v || '') ? v : ''; }
+
+/* 把云端错误翻译成人话，绝不静默 */
+function friendlyCloudError(e){
+  const code = (e && (e.code || (e.error && e.error.code))) || '';
+  const msg  = (e && (e.message || (e.error && e.error.message))) || '';
+  if(code === '42P01' || /could not find the table|schema cache|pgrst/i.test(msg))
+    return '云端作品墙还没建好，请稍后再试';
+  if(code === '42501' || /permission denied|rls|policy/i.test(msg)) return '云端没放行这次操作（权限未开），请稍后再试';
+  if(code === '23514' || /check constraint|too long/i.test(msg)) return '这幅画超过云端容量，少补几笔再试';
+  if(/401|403|unauthor|origin/i.test(msg)) return '云端连接未通过校验，请从分享链接打开再试';
+  if(/超时|timeout/i.test(msg)) return '云端响应太慢，检查网络后点「刷 新」再试';
+  if(/fetch|network|Failed to fetch|NetworkError/i.test(msg) || e instanceof TypeError)
+    return '没连上云端，检查网络后再试一次';
+  console.warn('[cloud] 未归类错误：', code || '(无 code)');
+  return '云端暂时没接住这次操作，请稍后再试（可点「刷 新」）';
+}
+
+/* ---- 投稿：把这幅补好的画写进云数据库 ---- */
+let publishing = false;
+async function publishToCloud(){
+  if(publishing) return;
+  if(!window.cloud){
+    cloudMsg('云端没连上，请从分享链接打开（本地补色与下载不受影响）', 'err'); return;
+  }
+  if(!strokes.length){
+    cloudMsg('先在画上落几笔，再把颜色留下来', 'err'); say('先补几笔颜色吧'); return;
+  }
+  const {canvas, name} = buildFramedCanvas();
+  const image = cloudImage(canvas);
+  if(!image){ cloudMsg('这幅画太大，试着少补几笔再存', 'err'); return; }
+
+  const row = {
+    title: (name || '我补的敦煌').slice(0, 20),
+    mural_id: IMGS[idx].id || String(idx),
+    mural_name: IMGS[idx].name,
+    mural_meta: IMGS[idx].meta || '',
+    palette: usedColors(),
+    progress: currentProgress(),
+    image_data: image,
+    author: '拾色人'
+  };
+
+  publishing = true;
+  $btnPublish.disabled = true;
+  $btnPublish.textContent = '正 在 送 去 云 端 …';
+  cloudMsg('正在把这幅画挂上墙…');
+  try{
+    const { data, error } = await withTimeout(
+      window.cloud.database.from(CLOUD_TABLE).insert(row).select('id, title, created_at'), 20000
+    );
+    if(error) throw error;
+    if(!Array.isArray(data) || !data.length) throw new Error('云端没有收下这幅画（可能没有写入权限）');
+    cloudMsg(`已挂上墙 ✦ 第 ${data[0].id} 幅 · 下面就能看见`, 'ok');
+    say('颜色已经留在云端了 ✦');
+    await loadWall(true);
+  }catch(e){
+    cloudMsg(friendlyCloudError(e), 'err');
+  }finally{
+    publishing = false;
+    $btnPublish.disabled = false;
+    $btnPublish.textContent = '留 在 云 端 · 给 大 家 看';
+  }
+}
+
+/* ---- 作品墙：从云端读回最近 12 幅 ---- */
+let wallSeq = 0;
+async function loadWall(keepMsg){
+  const seq = ++wallSeq;
+  if(!window.cloud){
+    cloudState('离 线');
+    if(!keepMsg) cloudMsg('云端没连上，作品墙暂时打不开（补色、下载仍可用）', 'err');
+    $wall.innerHTML = '<p class="wall-empty">云端没连上 · 你依然可以在上面补色、下载</p>';
+    return;
+  }
+  cloudState('读 取 中');
+  $wall.innerHTML = '<p class="wall-empty">正在从云端取画…</p>';
+  try{
+    const { data, error } = await withTimeout(
+      window.cloud.database.from(CLOUD_TABLE)
+        .select('id,title,mural_name,mural_meta,palette,progress,image_data,author,created_at')
+        .order('id', {ascending:false})
+        .limit(12), 15000
+    );
+    if(seq !== wallSeq) return;
+    if(error) throw error;
+    const rows = Array.isArray(data) ? data : [];
+    cloudState(`已 连 · ${rows.length} 幅`);
+    renderWall(rows);
+  }catch(e){
+    if(seq !== wallSeq) return;
+    cloudState('离 线');
+    if(!keepMsg) cloudMsg('作品墙没取到：' + friendlyCloudError(e), 'err');
+    $wall.innerHTML = '<p class="wall-empty">暂时取不到云端作品 · 点「刷 新」再试</p>';
+  }
+}
+
+function renderWall(rows){
+  $wall.innerHTML = '';
+  if(!rows.length){
+    $wall.innerHTML = '<p class="wall-empty">墙上还空着 · 做第一个把颜色留下来的人</p>';
+    return;
+  }
+  rows.forEach(r => {
+    const item = document.createElement('div');
+    item.className = 'wall-item';
+    const im = document.createElement('img');
+    im.src = safeImage(r.image_data);
+    im.alt = `${r.title || '无题'} · ${r.mural_name || ''}`;
+    im.loading = 'lazy';
+    const cap = document.createElement('div');
+    cap.className = 'wi-cap';
+    const b = document.createElement('b'); b.textContent = r.title || '无题';
+    const s = document.createElement('span');
+    s.textContent = `${r.mural_name || '敦煌'} · 补色 ${r.progress == null ? 0 : r.progress}%`;
+    cap.appendChild(b); cap.appendChild(s);
+    item.appendChild(im); item.appendChild(cap);
+    item.addEventListener('click', () => openLightbox(r));
+    $wall.appendChild(item);
+  });
+}
+
+/* ---- 灯箱：点开看大图 ---- */
+function openLightbox(r){
+  $('lightboxImg').src = safeImage(r.image_data);
+  $('lightboxCap').textContent =
+    `《${r.title || '无题'}》 · ${r.mural_name || ''} ${r.mural_meta || ''} · 补色 ${r.progress == null ? 0 : r.progress}%`;
+  $('lightbox').classList.add('on');
+}
+$('lightbox').addEventListener('click', e => {
+  if(e.target.id !== 'lightboxImg') $('lightbox').classList.remove('on');
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') $('lightbox').classList.remove('on');
+});
+
+$btnPublish.addEventListener('click', publishToCloud);
+$btnRefreshWall.addEventListener('click', () => loadWall());
+
+/* ---- 启动：预解码 12 张底图 + 拉取云端作品墙 ---- */
+function boot(){
+  loadWall();
+  if(!IMGS.length){ say('底图未载入，请确认 assets/paint-images.js 存在'); return; }
+  let n = 0;
+  const done = () => { if(++n === IMGS.length){ refreshPalette(); selectImage(0); } };
+  IMGS.forEach((it, i) => {
+    const im = new Image();
+    im.onload = () => { loaded[i] = im; done(); };
+    im.onerror = done;
+    im.src = it.src;
+  });
+}
+boot();
+/* 进入视野时同步案台新调的色 */
+new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) refreshPalette(); }), {threshold:.2})
+  .observe(document.getElementById('s7'));
+</script>
+</body>
+</html>
